@@ -1,4 +1,4 @@
-﻿# Gradle
+# Gradle
 .gradle/
 build/
 bin/
@@ -19,3 +19,6 @@ bin/
 
 # Logs
 *.log
+
+# Daily auto-commit script log
+daily-commit.log
