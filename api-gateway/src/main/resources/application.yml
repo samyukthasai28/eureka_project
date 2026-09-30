@@ -1,4 +1,4 @@
-﻿server:
+server:
   port: 8080
 
 spring:
@@ -10,19 +10,33 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
       routes:
         - id: order-service
           uri: lb://order-service
           predicates:
             - Path=/api/orders/**
+          filters:
+            - name: AuthenticationHeaderFilter
+              args:
+                requireAuth: false
         - id: inventory-service
           uri: lb://inventory-service
           predicates:
             - Path=/api/inventory/**
+          filters:
+            - name: AuthenticationHeaderFilter
+              args:
+                requireAuth: false
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/api/payments/**
+          filters:
+            - name: AuthenticationHeaderFilter
+              args:
+                requireAuth: false
 
 eureka:
   client:
@@ -37,7 +51,15 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,gateway
+        include: health,info,gateway,metrics
   endpoint:
     health:
       show-details: always
+    gateway:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.ecommerce.gateway: DEBUG
+    org.springframework.cloud.gateway: INFO
