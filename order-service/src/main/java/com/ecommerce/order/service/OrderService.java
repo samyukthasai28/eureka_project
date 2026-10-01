@@ -1,7 +1,8 @@
 package com.ecommerce.order.service;
 
-import com.ecommerce.common.event.OrderItemDto;
+import com.ecommerce.common.event.OrderItemRecord;
 import com.ecommerce.common.event.OrderPlacedEvent;
+import com.ecommerce.order.dto.OrderItemDto;
 import com.ecommerce.order.dto.OrderRequest;
 import com.ecommerce.order.dto.OrderResponse;
 import com.ecommerce.order.model.Order;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -58,14 +60,22 @@ public class OrderService {
         log.info("[ORDER-SERVICE] Created order: {} with total: {}", orderNumber, total);
 
         String eventId = UUID.randomUUID().toString();
-        OrderPlacedEvent event = OrderPlacedEvent.builder()
-                .eventId(eventId)
-                .orderId(saved.getId())
-                .orderNumber(saved.getOrderNumber())
-                .customerEmail(saved.getCustomerEmail())
-                .items(request.getItems())
-                .totalAmount(total)
-                .timestamp(LocalDateTime.now())
+        List<OrderItemRecord> itemRecords = request.getItems().stream()
+                .map(i -> OrderItemRecord.newBuilder()
+                        .setSkuCode(i.getSkuCode())
+                        .setPrice(i.getPrice().doubleValue())
+                        .setQuantity(i.getQuantity())
+                        .build())
+                .collect(Collectors.toList());
+
+        OrderPlacedEvent event = OrderPlacedEvent.newBuilder()
+                .setEventId(eventId)
+                .setOrderId(saved.getId())
+                .setOrderNumber(saved.getOrderNumber())
+                .setCustomerEmail(saved.getCustomerEmail())
+                .setItems(itemRecords)
+                .setTotalAmount(total.doubleValue())
+                .setTimestamp(Instant.now().toString())
                 .build();
 
         // Persist to transactional outbox store

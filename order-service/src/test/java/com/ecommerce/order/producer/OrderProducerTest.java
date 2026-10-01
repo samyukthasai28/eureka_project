@@ -1,6 +1,6 @@
 package com.ecommerce.order.producer;
 
-import com.ecommerce.common.event.OrderItemDto;
+import com.ecommerce.common.event.OrderItemRecord;
 import com.ecommerce.common.event.OrderPlacedEvent;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.TopicPartition;
@@ -14,8 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -41,14 +40,18 @@ public class OrderProducerTest {
     @Test
     @DisplayName("Should dispatch OrderPlacedEvent with correct topic, partition key, and payload")
     void testSendOrderPlacedEventSuccess() {
-        OrderPlacedEvent event = OrderPlacedEvent.builder()
-                .eventId("EVT-1001")
-                .orderId(1L)
-                .orderNumber("ORD-12345678")
-                .customerEmail("customer@example.com")
-                .items(List.of(OrderItemDto.builder().skuCode("iphone_15").quantity(1).price(new BigDecimal("799.99")).build()))
-                .totalAmount(new BigDecimal("799.99"))
-                .timestamp(LocalDateTime.now())
+        OrderPlacedEvent event = OrderPlacedEvent.newBuilder()
+                .setEventId("EVT-1001")
+                .setOrderId(1L)
+                .setOrderNumber("ORD-12345678")
+                .setCustomerEmail("customer@example.com")
+                .setItems(List.of(OrderItemRecord.newBuilder()
+                        .setSkuCode("iphone_15")
+                        .setQuantity(1)
+                        .setPrice(799.99)
+                        .build()))
+                .setTotalAmount(799.99)
+                .setTimestamp(Instant.now().toString())
                 .build();
 
         RecordMetadata metadata = new RecordMetadata(
@@ -71,10 +74,14 @@ public class OrderProducerTest {
     @Test
     @DisplayName("Should handle Kafka broker exception gracefully via callback without uncaught exception")
     void testSendOrderPlacedEventFailureCallback() {
-        OrderPlacedEvent event = OrderPlacedEvent.builder()
-                .eventId("EVT-FAIL-1")
-                .orderNumber("ORD-FAIL-01")
-                .customerEmail("test@example.com")
+        OrderPlacedEvent event = OrderPlacedEvent.newBuilder()
+                .setEventId("EVT-FAIL-1")
+                .setOrderId(2L)
+                .setOrderNumber("ORD-FAIL-01")
+                .setCustomerEmail("test@example.com")
+                .setItems(List.of())
+                .setTotalAmount(0.0)
+                .setTimestamp(Instant.now().toString())
                 .build();
 
         CompletableFuture<SendResult<String, Object>> failedFuture = new CompletableFuture<>();

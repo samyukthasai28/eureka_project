@@ -20,32 +20,37 @@ public class OrderEventHandlerService {
 
     @Transactional
     public void handleInventoryReserved(InventoryReservedEvent event) {
-        log.info("[ORDER-EVENT-HANDLER] Processing InventoryReservedEvent for order: {}", event.getOrderNumber());
+        String orderNumber = event.getOrderNumber().toString();
+        String eventId = event.getEventId().toString();
+        log.info("[ORDER-EVENT-HANDLER] Processing InventoryReservedEvent for order: {}", orderNumber);
 
-        if (!orderEventStoreService.recordInboundEvent(event.getEventId(), event.getOrderNumber(), "INVENTORY_RESERVED")) {
+        if (!orderEventStoreService.recordInboundEvent(eventId, orderNumber, "INVENTORY_RESERVED")) {
             return;
         }
 
-        orderRepository.findByOrderNumber(event.getOrderNumber()).ifPresentOrElse(order -> {
+        orderRepository.findByOrderNumber(orderNumber).ifPresentOrElse(order -> {
             order.setStatus(OrderStatus.CONFIRMED);
             orderRepository.save(order);
             log.info("[ORDER-EVENT-HANDLER] Order {} successfully updated to CONFIRMED", order.getOrderNumber());
-        }, () -> log.error("[ORDER-EVENT-HANDLER] Order not found for number: {}", event.getOrderNumber()));
+        }, () -> log.error("[ORDER-EVENT-HANDLER] Order not found for number: {}", orderNumber));
     }
 
     @Transactional
     public void handleInventoryReservationFailed(InventoryReservationFailedEvent event) {
+        String orderNumber = event.getOrderNumber().toString();
+        String eventId = event.getEventId().toString();
+        String reason = event.getReason().toString();
         log.warn("[ORDER-EVENT-HANDLER] Processing InventoryReservationFailedEvent for order: {}, reason: {}",
-                event.getOrderNumber(), event.getReason());
+                orderNumber, reason);
 
-        if (!orderEventStoreService.recordInboundEvent(event.getEventId(), event.getOrderNumber(), "INVENTORY_FAILED")) {
+        if (!orderEventStoreService.recordInboundEvent(eventId, orderNumber, "INVENTORY_FAILED")) {
             return;
         }
 
-        orderRepository.findByOrderNumber(event.getOrderNumber()).ifPresentOrElse(order -> {
+        orderRepository.findByOrderNumber(orderNumber).ifPresentOrElse(order -> {
             order.setStatus(OrderStatus.REJECTED);
             orderRepository.save(order);
             log.info("[ORDER-EVENT-HANDLER] Order {} updated to REJECTED due to stock shortage", order.getOrderNumber());
-        }, () -> log.error("[ORDER-EVENT-HANDLER] Order not found for number: {}", event.getOrderNumber()));
+        }, () -> log.error("[ORDER-EVENT-HANDLER] Order not found for number: {}", orderNumber));
     }
 }

@@ -1,6 +1,5 @@
 package com.ecommerce.order.dto;
 
-import com.ecommerce.common.event.OrderItemDto;
 import com.ecommerce.order.model.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

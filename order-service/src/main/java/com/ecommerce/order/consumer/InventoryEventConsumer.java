@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@KafkaListener(topics = "${app.kafka.topics.inventory-events:inventory-events-topic}", groupId = "order-group")
+@KafkaListener(topics = "${app.kafka.topics.inventory-events:inventory-events-topic}", groupId = "order-service")
 public class InventoryEventConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryEventConsumer.class);
