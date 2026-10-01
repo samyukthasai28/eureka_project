@@ -2,7 +2,7 @@ package com.ecommerce.inventory.producer;
 
 import com.ecommerce.common.event.InventoryReservationFailedEvent;
 import com.ecommerce.common.event.InventoryReservedEvent;
-import com.ecommerce.common.event.OrderItemDto;
+import com.ecommerce.common.event.ReservedItemRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +15,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -40,13 +39,17 @@ public class InventoryEventProducerTest {
     @Test
     @DisplayName("Should publish InventoryReservedEvent with orderNumber as message key")
     void testPublishInventoryReservedSuccess() {
-        InventoryReservedEvent event = InventoryReservedEvent.builder()
-                .eventId("EVT-RES-1")
-                .orderId(10L)
-                .orderNumber("ORD-998877")
-                .reservedItems(List.of(OrderItemDto.builder().skuCode("iphone_15").quantity(1).price(new BigDecimal("799.99")).build()))
-                .status("RESERVED")
-                .timestamp(LocalDateTime.now())
+        InventoryReservedEvent event = InventoryReservedEvent.newBuilder()
+                .setEventId("EVT-RES-1")
+                .setOrderId(10L)
+                .setOrderNumber("ORD-998877")
+                .setReservedItems(List.of(ReservedItemRecord.newBuilder()
+                        .setSkuCode("iphone_15")
+                        .setQuantity(1)
+                        .setPrice(799.99)
+                        .build()))
+                .setStatus("RESERVED")
+                .setTimestamp(Instant.now().toString())
                 .build();
 
         RecordMetadata metadata = new RecordMetadata(
@@ -65,13 +68,13 @@ public class InventoryEventProducerTest {
     @Test
     @DisplayName("Should publish InventoryReservationFailedEvent with orderNumber key on shortage")
     void testPublishInventoryReservationFailed() {
-        InventoryReservationFailedEvent event = InventoryReservationFailedEvent.builder()
-                .eventId("EVT-FAIL-2")
-                .orderId(11L)
-                .orderNumber("ORD-445566")
-                .reason("Shortage on SKU macbook_pro_16")
-                .shortageSkuCodes(List.of("macbook_pro_16"))
-                .timestamp(LocalDateTime.now())
+        InventoryReservationFailedEvent event = InventoryReservationFailedEvent.newBuilder()
+                .setEventId("EVT-FAIL-2")
+                .setOrderId(11L)
+                .setOrderNumber("ORD-445566")
+                .setReason("Shortage on SKU macbook_pro_16")
+                .setShortageSkuCodes(List.of("macbook_pro_16"))
+                .setTimestamp(Instant.now().toString())
                 .build();
 
         RecordMetadata metadata = new RecordMetadata(

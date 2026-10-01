@@ -21,7 +21,7 @@ public class InventoryEventProducer {
 
     public void publishInventoryReserved(InventoryReservedEvent event) {
         log.info("[KAFKA-PRODUCER] Publishing InventoryReservedEvent for order: {}", event.getOrderNumber());
-        kafkaTemplate.send(inventoryEventsTopic, event.getOrderNumber(), event)
+        kafkaTemplate.send(inventoryEventsTopic, event.getOrderNumber().toString(), event)
                 .whenComplete((result, ex) -> {
                     if (ex == null) {
                         log.info("[KAFKA-PRODUCER] Successfully published InventoryReservedEvent [offset={}]",
@@ -34,7 +34,7 @@ public class InventoryEventProducer {
 
     public void publishInventoryReservationFailed(InventoryReservationFailedEvent event) {
         log.warn("[KAFKA-PRODUCER] Publishing InventoryReservationFailedEvent for order: {}", event.getOrderNumber());
-        kafkaTemplate.send(inventoryEventsTopic, event.getOrderNumber(), event)
+        kafkaTemplate.send(inventoryEventsTopic, event.getOrderNumber().toString(), event)
                 .whenComplete((result, ex) -> {
                     if (ex == null) {
                         log.info("[KAFKA-PRODUCER] Successfully published InventoryReservationFailedEvent [offset={}]",
