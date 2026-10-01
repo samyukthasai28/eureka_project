@@ -1,0 +1,28 @@
+{
+  "type": "record",
+  "name": "InventoryReservedEvent",
+  "namespace": "com.ecommerce.common.event",
+  "doc": "Event published when inventory is successfully reserved",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "orderId", "type": "long" },
+    { "name": "orderNumber", "type": "string" },
+    { "name": "status", "type": "string" },
+    {
+      "name": "reservedItems",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "ReservedItemRecord",
+          "fields": [
+            { "name": "skuCode", "type": "string" },
+            { "name": "quantity", "type": "int" },
+            { "name": "price", "type": "double" }
+          ]
+        }
+      }
+    },
+    { "name": "timestamp", "type": "string" }
+  ]
+}

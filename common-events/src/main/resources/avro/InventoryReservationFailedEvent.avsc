@@ -1,0 +1,20 @@
+{
+  "type": "record",
+  "name": "InventoryReservationFailedEvent",
+  "namespace": "com.ecommerce.common.event",
+  "doc": "Event published when inventory reservation fails due to shortage",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "orderId", "type": "long" },
+    { "name": "orderNumber", "type": "string" },
+    { "name": "reason", "type": "string" },
+    {
+      "name": "shortageSkuCodes",
+      "type": {
+        "type": "array",
+        "items": "string"
+      }
+    },
+    { "name": "timestamp", "type": "string" }
+  ]
+}

@@ -2,12 +2,50 @@ plugins {
     id 'java-library'
 }
 
+configurations {
+    avroTools
+}
+
 dependencies {
+    avroTools 'org.apache.avro:avro-tools:1.11.3'
+    api 'org.apache.avro:avro:1.11.3'
+    api 'org.apache.kafka:kafka-clients'
+    api 'org.springframework.kafka:spring-kafka'
     api 'com.fasterxml.jackson.core:jackson-databind'
     api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 }
+
+def generatedDir = file("${buildDir}/generated-main-avro-java")
+
+sourceSets {
+    main {
+        java {
+            srcDirs += generatedDir
+        }
+    }
+}
+
+task generateAvroJava {
+    description = 'Compiles Apache Avro .avsc schemas into SpecificRecord Java classes'
+    inputs.dir file('src/main/resources/avro')
+    outputs.dir generatedDir
+
+    doLast {
+        generatedDir.mkdirs()
+        fileTree('src/main/resources/avro').matching { include '**/*.avsc' }.each { File schemaFile ->
+            javaexec {
+                classpath = configurations.avroTools
+                mainClass = 'org.apache.avro.tool.Main'
+                args = ['compile', 'schema', schemaFile.absolutePath, generatedDir.absolutePath]
+            }
+        }
+    }
+}
+
+compileJava.dependsOn generateAvroJava
 
 bootJar {
     enabled = false

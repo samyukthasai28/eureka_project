@@ -1,0 +1,13 @@
+{
+  "type": "record",
+  "name": "PaymentFailedEvent",
+  "namespace": "com.ecommerce.common.event",
+  "doc": "Event published when order payment fails",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "orderNumber", "type": "string" },
+    { "name": "amount", "type": "double" },
+    { "name": "reason", "type": "string" },
+    { "name": "timestamp", "type": "string" }
+  ]
+}

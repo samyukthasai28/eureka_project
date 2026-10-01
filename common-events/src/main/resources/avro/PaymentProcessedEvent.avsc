@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "PaymentProcessedEvent",
+  "namespace": "com.ecommerce.common.event",
+  "doc": "Event published when order payment is successfully processed",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "paymentId", "type": "long" },
+    { "name": "orderNumber", "type": "string" },
+    { "name": "amount", "type": "double" },
+    { "name": "paymentMethod", "type": "string" },
+    { "name": "transactionId", "type": "string" },
+    { "name": "status", "type": "string" },
+    { "name": "timestamp", "type": "string" }
+  ]
+}
