@@ -20,47 +20,101 @@ spring:
           predicates:
             - Path=/api/orders/**
           filters:
-            - name: AuthenticationHeaderFilter
+            - name: CircuitBreaker
               args:
-                requireAuth: false
+                name: orderCircuitBreaker
+                fallbackUri: forward:/fallback/orders
         - id: inventory-service
           uri: lb://inventory-service
           predicates:
             - Path=/api/inventory/**
           filters:
-            - name: AuthenticationHeaderFilter
+            - name: CircuitBreaker
               args:
-                requireAuth: false
+                name: inventoryCircuitBreaker
+                fallbackUri: forward:/fallback/inventory
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/api/payments/**
           filters:
-            - name: AuthenticationHeaderFilter
+            - name: CircuitBreaker
               args:
-                requireAuth: false
+                name: paymentCircuitBreaker
+                fallbackUri: forward:/fallback/payments
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
     register-with-eureka: true
     fetch-registry: true
   instance:
     prefer-ip-address: true
 
+# Resilience4j Gateway Circuit Breaker & Time Limiter
+resilience4j:
+  circuitbreaker:
+    instances:
+      orderCircuitBreaker:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5000ms
+        permitted-number-of-calls-in-half-open-state: 3
+      inventoryCircuitBreaker:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5000ms
+        permitted-number-of-calls-in-half-open-state: 3
+      paymentCircuitBreaker:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5000ms
+        permitted-number-of-calls-in-half-open-state: 3
+  timelimiter:
+    instances:
+      orderCircuitBreaker:
+        timeout-duration: 3s
+      inventoryCircuitBreaker:
+        timeout-duration: 3s
+      paymentCircuitBreaker:
+        timeout-duration: 3s
+
+# Observability, Metrics & Tracing
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,gateway,metrics
+        include: health,info,gateway,metrics,prometheus
   endpoint:
     health:
       show-details: always
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
     gateway:
       enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: ${MANAGEMENT_ZIPKIN_TRACING_ENDPOINT:${ZIPKIN_ENDPOINT:http://localhost:9411/api/v2/spans}}
+
+# OpenAPI / Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
     root: INFO
     com.ecommerce.gateway: DEBUG

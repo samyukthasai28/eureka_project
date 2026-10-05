@@ -12,6 +12,9 @@ public class OrderTopicConfig {
     @Value("${app.kafka.topics.order-placed:order-placed-topic}")
     private String orderPlacedTopic;
 
+    @Value("${app.kafka.topics.order-compensation:order-compensation-topic}")
+    private String orderCompensationTopic;
+
     @Bean
     public NewTopic orderPlacedTopic() {
         return TopicBuilder.name(orderPlacedTopic)
@@ -20,6 +23,17 @@ public class OrderTopicConfig {
                 .config("min.insync.replicas", "1")
                 .config("cleanup.policy", "delete")
                 .config("retention.ms", "604800000") // 7 days
+                .build();
+    }
+
+    @Bean
+    public NewTopic orderCompensationTopic() {
+        return TopicBuilder.name(orderCompensationTopic)
+                .partitions(3)
+                .replicas(1)
+                .config("min.insync.replicas", "1")
+                .config("cleanup.policy", "delete")
+                .config("retention.ms", "604800000")
                 .build();
     }
 }

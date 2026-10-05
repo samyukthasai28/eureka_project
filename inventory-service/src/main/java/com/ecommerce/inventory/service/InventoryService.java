@@ -5,6 +5,9 @@ import com.ecommerce.inventory.exception.InsufficientStockException;
 import com.ecommerce.inventory.exception.InventoryNotFoundException;
 import com.ecommerce.inventory.model.Inventory;
 import com.ecommerce.inventory.repository.InventoryRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +24,25 @@ public class InventoryService {
     private static final Logger log = LoggerFactory.getLogger(InventoryService.class);
     private final InventoryRepository inventoryRepository;
 
+    @CircuitBreaker(name = "inventoryDatabase", fallbackMethod = "isInStockFallback")
+    @RateLimiter(name = "inventoryCheck")
     @Transactional(readOnly = true)
     public List<InventoryResponse> isInStock(List<String> skuCodes) {
         log.info("[INVENTORY-SERVICE] Checking stock for SKUs: {}", skuCodes);
         return inventoryRepository.findBySkuCodeIn(skuCodes).stream()
                 .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<InventoryResponse> isInStockFallback(List<String> skuCodes, Throwable t) {
+        log.warn("[INVENTORY-SERVICE] Fallback triggered for isInStock: {}", t.getMessage());
+        return skuCodes.stream()
+                .map(sku -> InventoryResponse.builder()
+                        .skuCode(sku)
+                        .isInStock(false)
+                        .availableQuantity(0)
+                        .reservedQuantity(0)
+                        .build())
                 .collect(Collectors.toList());
     }
 

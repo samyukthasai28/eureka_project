@@ -1,0 +1,27 @@
+{
+  "type": "record",
+  "name": "InventoryReleaseEvent",
+  "namespace": "com.ecommerce.common.event",
+  "doc": "Compensating event published to release previously reserved inventory",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "orderId", "type": "long" },
+    { "name": "orderNumber", "type": "string" },
+    { "name": "reason", "type": "string" },
+    {
+      "name": "items",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "ReleaseItemRecord",
+          "fields": [
+            { "name": "skuCode", "type": "string" },
+            { "name": "quantity", "type": "int" }
+          ]
+        }
+      }
+    },
+    { "name": "timestamp", "type": "string" }
+  ]
+}

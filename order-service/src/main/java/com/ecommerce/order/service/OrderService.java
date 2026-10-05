@@ -10,6 +10,9 @@ import com.ecommerce.order.model.OrderItem;
 import com.ecommerce.order.model.OrderStatus;
 import com.ecommerce.order.producer.OrderProducer;
 import com.ecommerce.order.repository.OrderRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,9 @@ public class OrderService {
     private final OrderProducer orderProducer;
     private final OrderEventStoreService orderEventStoreService;
 
+    @CircuitBreaker(name = "orderService", fallbackMethod = "placeOrderFallback")
+    @Retry(name = "orderService")
+    @RateLimiter(name = "orderPlacement")
     @Transactional
     public OrderResponse placeOrder(OrderRequest request) {
         String orderNumber = "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -44,6 +50,8 @@ public class OrderService {
                 .orderNumber(orderNumber)
                 .customerEmail(request.getCustomerEmail())
                 .status(OrderStatus.PLACED)
+                .inventoryStatus("PENDING")
+                .paymentStatus("PENDING")
                 .totalAmount(total)
                 .build();
 
@@ -85,6 +93,17 @@ public class OrderService {
         orderProducer.sendOrderPlacedEvent(event);
 
         return mapToResponse(saved);
+    }
+
+    public OrderResponse placeOrderFallback(OrderRequest request, Throwable t) {
+        log.error("[ORDER-SERVICE] Resilience4j fallback triggered for placeOrder: {}", t.getMessage());
+        return OrderResponse.builder()
+                .orderNumber("FALLBACK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase())
+                .customerEmail(request.getCustomerEmail())
+                .status(OrderStatus.REJECTED)
+                .totalAmount(BigDecimal.ZERO)
+                .items(List.of())
+                .build();
     }
 
     @Transactional(readOnly = true)

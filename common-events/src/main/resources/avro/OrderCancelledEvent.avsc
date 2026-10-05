@@ -1,0 +1,13 @@
+{
+  "type": "record",
+  "name": "OrderCancelledEvent",
+  "namespace": "com.ecommerce.common.event",
+  "doc": "Event published when an order is cancelled or rolled back in saga",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "orderId", "type": "long" },
+    { "name": "orderNumber", "type": "string" },
+    { "name": "reason", "type": "string" },
+    { "name": "timestamp", "type": "string" }
+  ]
+}

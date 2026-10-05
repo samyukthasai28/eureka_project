@@ -9,6 +9,9 @@ import com.ecommerce.payment.model.PaymentRequest;
 import com.ecommerce.payment.model.PaymentResponse;
 import com.ecommerce.payment.model.PaymentStatus;
 import com.ecommerce.payment.repository.PaymentRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,8 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final PaymentEventProducer paymentEventProducer;
 
+    @CircuitBreaker(name = "paymentGateway")
+    @Retry(name = "paymentGateway")
     @Transactional
     public PaymentResponse processOrderPayment(OrderPlacedEvent event) {
         String orderNumber = event.getOrderNumber().toString();
@@ -86,6 +91,8 @@ public class PaymentService {
         return mapToResponse(saved);
     }
 
+    @CircuitBreaker(name = "paymentGateway", fallbackMethod = "manualPaymentFallback")
+    @RateLimiter(name = "paymentProcessing")
     @Transactional
     public PaymentResponse createManualPayment(PaymentRequest request) {
         log.info("[PAYMENT-SERVICE] Manual payment requested for order: {}, amount: {}", request.getOrderNumber(), request.getAmount());
@@ -127,6 +134,18 @@ public class PaymentService {
         }
 
         return mapToResponse(saved);
+    }
+
+    public PaymentResponse manualPaymentFallback(PaymentRequest request, Throwable t) {
+        log.error("[PAYMENT-SERVICE] Fallback triggered for manual payment: {}", t.getMessage());
+        return PaymentResponse.builder()
+                .orderNumber(request.getOrderNumber())
+                .amount(request.getAmount())
+                .paymentStatus(PaymentStatus.FAILED)
+                .paymentMethod("FALLBACK")
+                .transactionId("FALLBACK-" + UUID.randomUUID().toString())
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 
     @Transactional(readOnly = true)

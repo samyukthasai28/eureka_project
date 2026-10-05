@@ -35,18 +35,32 @@ public class GlobalLoggingFilter implements GlobalFilter, Ordered {
                 request.getURI().getPath(),
                 request.getRemoteAddress() != null ? request.getRemoteAddress().getAddress().getHostAddress() : "UNKNOWN");
 
-        return chain.filter(exchange.mutate().request(request).build()).then(Mono.fromRunnable(() -> {
+        exchange.getResponse().beforeCommit(() -> {
+            try {
+                ServerHttpResponse response = exchange.getResponse();
+                if (!response.getHeaders().containsKey("X-Request-Id")) {
+                    response.getHeaders().add("X-Request-Id", requestId);
+                }
+                Long start = exchange.getAttribute(START_TIME);
+                long duration = start != null ? System.currentTimeMillis() - start : 0;
+                if (!response.getHeaders().containsKey("X-Response-Time")) {
+                    response.getHeaders().add("X-Response-Time", duration + "ms");
+                }
+            } catch (Exception ignored) {
+            }
+            return Mono.empty();
+        });
+
+        return chain.filter(exchange.mutate().request(request).build()).doFinally(signalType -> {
             Long start = exchange.getAttribute(START_TIME);
             long duration = start != null ? System.currentTimeMillis() - start : 0;
             ServerHttpResponse response = exchange.getResponse();
-            response.getHeaders().add("X-Request-Id", requestId);
-            response.getHeaders().add("X-Response-Time", duration + "ms");
 
             log.info("[GATEWAY-RESP] ID={} | Status={} | Latency={}ms",
                     requestId,
                     response.getStatusCode(),
                     duration);
-        }));
+        });
     }
 
     @Override

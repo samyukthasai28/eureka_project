@@ -12,6 +12,9 @@ public class InventoryTopicConfig {
     @Value("${app.kafka.topics.inventory-events:inventory-events-topic}")
     private String inventoryEventsTopic;
 
+    @Value("${app.kafka.topics.order-compensation:order-compensation-topic}")
+    private String orderCompensationTopic;
+
     @Bean
     public NewTopic inventoryEventsTopic() {
         return TopicBuilder.name(inventoryEventsTopic)
@@ -20,6 +23,17 @@ public class InventoryTopicConfig {
                 .config("min.insync.replicas", "1")
                 .config("cleanup.policy", "delete")
                 .config("retention.ms", "604800000") // 7 days
+                .build();
+    }
+
+    @Bean
+    public NewTopic orderCompensationTopic() {
+        return TopicBuilder.name(orderCompensationTopic)
+                .partitions(3)
+                .replicas(1)
+                .config("min.insync.replicas", "1")
+                .config("cleanup.policy", "delete")
+                .config("retention.ms", "604800000")
                 .build();
     }
 }

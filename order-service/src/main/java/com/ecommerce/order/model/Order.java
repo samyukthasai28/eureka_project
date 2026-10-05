@@ -35,6 +35,14 @@ public class Order {
     @Column(name = "total_amount", precision = 12, scale = 2)
     private BigDecimal totalAmount;
 
+    @Column(name = "inventory_status")
+    @Builder.Default
+    private String inventoryStatus = "PENDING";
+
+    @Column(name = "payment_status")
+    @Builder.Default
+    private String paymentStatus = "PENDING";
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     @Builder.Default

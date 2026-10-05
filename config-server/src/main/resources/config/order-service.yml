@@ -10,9 +10,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 app:
   kafka:
@@ -20,3 +17,31 @@ app:
       order-placed: order-placed-topic
       inventory-events: inventory-events-topic
       payment-events: payment-events-topic
+      order-compensation: order-compensation-topic
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      orderService:
+        sliding-window-size: 5
+        minimum-number-of-calls: 3
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5000ms
+        permitted-number-of-calls-in-half-open-state: 3
+      inventoryService:
+        sliding-window-size: 5
+        minimum-number-of-calls: 3
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5000ms
+        permitted-number-of-calls-in-half-open-state: 3
+  retry:
+    instances:
+      orderService:
+        max-attempts: 3
+        wait-duration: 500ms
+  ratelimiter:
+    instances:
+      orderPlacement:
+        limit-for-period: 20
+        limit-refresh-period: 1s
+        timeout-duration: 100ms
