@@ -8,7 +8,7 @@ A production-grade, reactive, event-driven e-commerce microservices ecosystem bu
 
 ```mermaid
 flowchart TD
-    Client[HTTP Client / Frontend / Swagger UI] -->|Bearer JWT| Gateway[API Gateway :8080]
+    Client[Modern Web UI / HTTP Client / Swagger UI] -->|Bearer JWT| Gateway[API Gateway :8080]
     
     subgraph Observability & Reliability Stack
         Prometheus[Prometheus :9090]
@@ -177,6 +177,27 @@ Resilience is configured at both the API Gateway and individual microservice lev
 - **Prometheus Metrics**: Actuator exposes metrics at `/actuator/prometheus` across all services.
 - **Prometheus UI**: Navigate to `http://localhost:9090` to query metrics (e.g. `resilience4j_circuitbreaker_state`, `http_server_requests_seconds_count`).
 - **Grafana**: Navigate to `http://localhost:3000` (User: `admin`, Password: `admin`) with auto-provisioned Prometheus datasource.
+
+---
+
+## 💻 Modern Web Frontend & Live Saga Visualizer
+
+The project includes a **modern, accessible (WCAG 2.1 AA compliant), single-page e-commerce frontend**:
+
+- **Direct Gateway URL**: `http://localhost:8080/`
+- **Standalone File**: `frontend/index.html` (can also be opened directly in any web browser)
+
+### ✨ Core Features
+1. **Interactive Product Catalog**: Browse products (phones, laptops, audio, lifestyle) with prices, stock tags, and quantity selectors.
+2. **Accessible Cart & Instant Checkout**: Slide-over drawer with item totals and customer email checkout.
+3. **Real-Time Distributed Saga Visualizer**: Step-by-step visual animation of the Kafka event sequence:
+   - `Step 1`: **Order Service** emits `OrderPlacedEvent`
+   - `Step 2`: **Inventory Service** reserves stock or emits `InventoryReservationFailedEvent`
+   - `Step 3`: **Payment Service** captures payment or emits `PaymentFailedEvent`
+   - `Step 4`: **Compensating Transactions** — automatic rollback releasing reserved inventory and marking order `CANCELLED`.
+4. **1-Click JWT Quick Login**: Generates a valid signed Bearer token (`ROLE_USER` / `ROLE_ADMIN`) via `/api/auth/token`.
+5. **Orders Tracker & Inventory Manager**: View placed orders and perform live stock refills.
+6. **Microservices Health Hub**: Real-time status cards for Eureka, Gateway, Order, Inventory, Payment, Zipkin, Prometheus, and Grafana.
 
 ---
 

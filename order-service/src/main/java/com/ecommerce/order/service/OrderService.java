@@ -113,6 +113,13 @@ public class OrderService {
         return mapToResponse(order);
     }
 
+    @Transactional(readOnly = true)
+    public List<OrderResponse> getAllOrders() {
+        return orderRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
     private OrderResponse mapToResponse(Order order) {
         List<OrderItemDto> itemDtos = order.getOrderItems().stream()
                 .map(i -> OrderItemDto.builder()

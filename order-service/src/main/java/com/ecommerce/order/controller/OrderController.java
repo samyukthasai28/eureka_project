@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -19,6 +21,13 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderService orderService;
+
+    @Operation(summary = "Get All Orders", description = "Fetches all placed orders")
+    @ApiResponse(responseCode = "200", description = "Orders retrieved successfully")
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
 
     @Operation(summary = "Place a new Order", description = "Creates an order and initiates distributed Saga orchestration via Kafka")
     @ApiResponses(value = {
