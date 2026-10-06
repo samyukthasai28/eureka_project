@@ -1,4 +1,5 @@
 rootProject.name = 'eureka_project'
 
 include 'api-gateway'
+include 'common-events'
 include 'inventory-service'
