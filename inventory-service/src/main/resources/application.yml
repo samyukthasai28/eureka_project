@@ -14,9 +14,17 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: inventory-group
+      auto-offset-reset: earliest
+
+app:
+  kafka:
+    topics:
+      order-placed: order-placed-topic
+      inventory-events: inventory-events-topic
 
 eureka:
   client:
