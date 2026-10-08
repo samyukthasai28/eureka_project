@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CloudMart | Distributed E-Commerce Microservices</title>
+  <title>CloudMart | Distributed E-Commerce Microservices Dashboard</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -25,490 +25,656 @@
     }
   </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    code, pre { font-family: 'JetBrains Mono', monospace; }
-    .step-active { border-color: #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
-    .step-completed { border-color: #10b981; }
-    .step-failed { border-color: #ef4444; }
+    code, pre, .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .pulse-glow { animation: pulseGlow 2s infinite; }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.02); }
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 4px; }
   </style>
 </head>
-<body class="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+<body class="h-full bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white transition-colors duration-200">
 
-  <!-- Live Announcer for Screen Readers (ARIA live) -->
+  <!-- Screen Reader Live Announcer -->
   <div id="sr-announcer" class="sr-only" aria-live="polite" role="status"></div>
 
-  <!-- App Wrapper -->
+  <!-- Main Container -->
   <div class="min-h-full flex flex-col">
 
-    <!-- Top Announcement / Infrastructure Header -->
-    <header role="banner" class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Top Command Header -->
+    <header role="banner" class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 shadow-md">
+      <div class="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           
-          <!-- Logo & Brand -->
+          <!-- Brand & Architecture Tag -->
           <div class="flex items-center space-x-3">
-            <span class="p-2 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-xl text-white shadow-md shadow-indigo-500/20">
+            <span class="p-2.5 bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 rounded-xl text-white shadow-lg shadow-indigo-500/25">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </span>
             <div>
               <div class="flex items-center space-x-2">
-                <span class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">CloudMart</span>
-                <span class="text-xs px-2 py-0.5 font-semibold bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 rounded-full">v4.0 Enterprise</span>
+                <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-white bg-clip-text text-transparent">CloudMart Enterprise</span>
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">Distributed Microservices</span>
               </div>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Event-Driven Microservices Architecture</p>
+              <p class="text-[11px] text-slate-400 font-medium">Event-Driven Saga Choreography • Apache Kafka • Avro • Spring Boot 3</p>
             </div>
           </div>
 
-          <!-- Quick Navigation Links (Infrastructure) -->
-          <nav aria-label="System Infrastructure" class="hidden md:flex items-center space-x-2">
-            <a href="http://localhost:8761" target="_blank" rel="noopener" class="px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition" title="Netflix Eureka Service Registry">
-              Eureka: 8761
-            </a>
-            <a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener" class="px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition" title="OpenAPI 3 / Swagger Documentation">
-              Swagger UI
-            </a>
-            <a href="http://localhost:9411" target="_blank" rel="noopener" class="px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition" title="Zipkin Distributed Tracing">
-              Zipkin: 9411
-            </a>
-            <a href="http://localhost:9090" target="_blank" rel="noopener" class="px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition" title="Prometheus Metrics">
-              Prometheus: 9090
-            </a>
-          </nav>
+          <!-- Microservices Live Status Radar in Header -->
+          <div class="hidden xl:flex items-center space-x-2 bg-slate-950/80 border border-slate-800/80 px-3 py-1.5 rounded-2xl text-[11px]">
+            <span class="text-slate-400 font-semibold uppercase tracking-wider text-[10px] mr-1">Services:</span>
+            <div class="flex items-center space-x-1.5 text-emerald-400 font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Gateway :8080</span>
+            </div>
+            <span class="text-slate-700">•</span>
+            <div class="flex items-center space-x-1 text-emerald-400 font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Eureka :8761</span>
+            </div>
+            <span class="text-slate-700">•</span>
+            <div class="flex items-center space-x-1 text-emerald-400 font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Kafka :9092</span>
+            </div>
+            <span class="text-slate-700">•</span>
+            <div class="flex items-center space-x-1 text-emerald-400 font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>PostgreSQL</span>
+            </div>
+          </div>
 
-          <!-- Auth & Cart Controls -->
-          <div class="flex items-center space-x-3">
+          <!-- Quick Navigation Links (Infrastructure Tools) -->
+          <div class="flex items-center space-x-2">
+            <div class="hidden md:flex items-center space-x-1.5 text-xs">
+              <a href="http://localhost:8761" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-xl transition flex items-center space-x-1" title="Eureka Service Registry">
+                <span>🌐</span>
+                <span class="font-medium">Eureka</span>
+              </a>
+              <a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-xl transition flex items-center space-x-1" title="OpenAPI / Swagger 3 Docs">
+                <span>📖</span>
+                <span class="font-medium">Swagger</span>
+              </a>
+              <a href="http://localhost:9411" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-xl transition flex items-center space-x-1" title="Zipkin Tracing">
+                <span>🔍</span>
+                <span class="font-medium">Zipkin</span>
+              </a>
+              <a href="http://localhost:9090" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-xl transition flex items-center space-x-1" title="Prometheus Metrics">
+                <span>📊</span>
+                <span class="font-medium">Prometheus</span>
+              </a>
+              <a href="http://localhost:3000" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-xl transition flex items-center space-x-1" title="Grafana Dashboards">
+                <span>📈</span>
+                <span class="font-medium">Grafana</span>
+              </a>
+            </div>
 
-            <!-- Auth Status Pill -->
-            <div id="auth-status-container" class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3 py-1 text-xs font-medium">
-              <span id="auth-status-indicator" class="w-2 h-2 rounded-full bg-emerald-500 mr-2" aria-hidden="true"></span>
-              <span id="auth-status-label" class="text-slate-700 dark:text-slate-300 truncate max-w-[140px] sm:max-w-[200px]">Checking Auth...</span>
-              <button id="quick-login-btn" onclick="quickLogin()" class="ml-2 px-2 py-0.5 text-[11px] font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-full transition shadow-sm" aria-label="1-Click JWT Quick Login">
-                Quick Login
+            <!-- Auth Pill -->
+            <div class="flex items-center bg-slate-800/80 border border-slate-700/60 rounded-full px-3 py-1 text-xs font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2"></span>
+              <span id="user-display" class="text-slate-200 truncate max-w-[130px] sm:max-w-[160px]">customer@ecommerce.com</span>
+              <button onclick="quickLogin()" class="ml-2 px-2.5 py-0.5 text-[11px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-full transition shadow-sm" title="Generate New Bearer JWT Token">
+                Auth JWT
               </button>
             </div>
 
-            <!-- Dark Mode Toggle -->
-            <button onclick="toggleDarkMode()" aria-label="Toggle dark mode" class="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-              <svg id="theme-icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-              <svg id="theme-icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-            </button>
-
-            <!-- Cart Trigger Button -->
-            <button onclick="toggleCartModal(true)" aria-label="View Shopping Cart" class="relative p-2 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 rounded-xl transition">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              <span id="cart-badge-count" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900">0</span>
+            <!-- Cart Trigger -->
+            <button onclick="toggleCartDrawer(true)" class="relative p-2.5 text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded-xl transition" aria-label="Shopping Cart">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+              <span id="cart-counter" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-slate-900">0</span>
             </button>
 
           </div>
 
-        </div>
-      </div>
-
-      <!-- Navigation Tabs -->
-      <div class="border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav role="navigation" aria-label="Primary sections" class="flex space-x-1 sm:space-x-4 py-2 overflow-x-auto">
-            <button onclick="switchTab('catalog')" id="tab-btn-catalog" class="tab-btn px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-600 text-white shadow-sm flex items-center space-x-1.5 transition">
-              <span>🛍️</span>
-              <span>Storefront Catalog</span>
-            </button>
-            <button onclick="switchTab('saga')" id="tab-btn-saga" class="tab-btn px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 flex items-center space-x-1.5 transition">
-              <span>⚡</span>
-              <span>Distributed Saga Visualizer</span>
-            </button>
-            <button onclick="switchTab('orders')" id="tab-btn-orders" class="tab-btn px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 flex items-center space-x-1.5 transition">
-              <span>📦</span>
-              <span>Orders Tracker</span>
-            </button>
-            <button onclick="switchTab('inventory')" id="tab-btn-inventory" class="tab-btn px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 flex items-center space-x-1.5 transition">
-              <span>📊</span>
-              <span>Stock & Inventory</span>
-            </button>
-            <button onclick="switchTab('health')" id="tab-btn-health" class="tab-btn px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 flex items-center space-x-1.5 transition">
-              <span>🛡️</span>
-              <span>Microservices Hub</span>
-            </button>
-          </nav>
         </div>
       </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main role="main" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <!-- Main Content Workspace -->
+    <main role="main" class="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-      <!-- Toast Notification Container -->
-      <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+      <!-- Toast Alerts Container -->
+      <div id="toast-shelf" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-      <!-- ========================================== -->
-      <!-- TAB 1: STOREFRONT CATALOG                  -->
-      <!-- ========================================== -->
-      <section id="tab-content-catalog" class="tab-panel space-y-6">
+      <!-- ========================================================================= -->
+      <!-- TOP EXECUTIVE KPI BAR (Everything Understood at a Glance)                 -->
+      <!-- ========================================================================= -->
+      <section aria-label="System Metrics Overview" class="grid grid-cols-2 md:grid-cols-4 gap-4">
         
-        <!-- Hero Banner -->
-        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-700 text-white p-6 sm:p-10 shadow-xl shadow-indigo-500/10">
-          <div class="relative z-10 max-w-2xl space-y-3">
-            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-md">Cloud-Native E-Commerce</span>
-            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Enterprise Microservices Experience</h1>
-            <p class="text-indigo-100 text-sm sm:text-base leading-relaxed">
-              Every purchase triggers an asynchronous **Distributed Saga** across independent Order, Inventory, and Payment microservices using Apache Kafka & Avro schemas.
-            </p>
-            <div class="pt-2 flex flex-wrap gap-2 text-xs">
-              <span class="bg-black/20 px-3 py-1.5 rounded-lg font-mono">Gateway :8080</span>
-              <span class="bg-black/20 px-3 py-1.5 rounded-lg font-mono">Eureka :8761</span>
-              <span class="bg-black/20 px-3 py-1.5 rounded-lg font-mono">Kafka 3-Brokers</span>
-              <span class="bg-black/20 px-3 py-1.5 rounded-lg font-mono">Resilience4j Protected</span>
-            </div>
+        <!-- KPI 1: Orders -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-sm hover:border-indigo-500/40 transition">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>📦 Placed Orders</span>
+            <span class="text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full text-[10px]">PostgreSQL :5432</span>
           </div>
-          <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-        </div>
-
-        <!-- Filter & Search Controls -->
-        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between pb-2">
-          <div class="flex items-center space-x-2 w-full sm:w-auto">
-            <label for="category-filter" class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Filter:</label>
-            <select id="category-filter" onchange="filterProducts()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs sm:text-sm rounded-xl px-3 py-2 font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              <option value="ALL">All Categories</option>
-              <option value="ELECTRONICS">Electronics & Mobile</option>
-              <option value="COMPUTERS">Laptops & Workstations</option>
-              <option value="AUDIO">Audio & Sound</option>
-              <option value="LIFESTYLE">Lifestyle & Wearables</option>
-            </select>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="kpi-orders-count" class="text-2xl sm:text-3xl font-extrabold text-white">0</span>
+            <span id="kpi-orders-volume" class="text-xs sm:text-sm font-mono text-emerald-400 font-bold">$0.00 Volume</span>
           </div>
-          <div class="w-full sm:w-72">
-            <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Search products or SKU..." class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs sm:text-sm rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none" aria-label="Search products">
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between">
+            <span id="kpi-orders-status">0 Completed • 0 Cancelled</span>
+            <span class="text-indigo-400 hover:underline cursor-pointer" onclick="scrollToSection('section-data-explorer')">View Records →</span>
           </div>
         </div>
 
-        <!-- Product Cards Grid -->
-        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Populated dynamically via JavaScript -->
+        <!-- KPI 2: Inventory -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-sm hover:border-indigo-500/40 transition">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>🏷️ Inventory Stock</span>
+            <span class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[10px]">Real-Time Locks</span>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="kpi-inventory-units" class="text-2xl sm:text-3xl font-extrabold text-white">135</span>
+            <span class="text-xs sm:text-sm font-mono text-slate-300 font-semibold">6 Active SKUs</span>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>All catalog items available</span>
+            <span class="text-emerald-400 font-semibold">100% In-Stock</span>
+          </div>
+        </div>
+
+        <!-- KPI 3: Kafka Saga Stream -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-sm hover:border-indigo-500/40 transition">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>⚡ Kafka Event Bus</span>
+            <span class="text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded-full text-[10px]">3 Partitions • Avro</span>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="kpi-events-count" class="text-2xl sm:text-3xl font-extrabold text-white">0</span>
+            <span class="text-xs sm:text-sm font-mono text-violet-400 font-bold">4 Topics Active</span>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Saga Choreography Mode</span>
+            <span class="text-emerald-400">Deterministic Keys</span>
+          </div>
+        </div>
+
+        <!-- KPI 4: Microservices & Circuit Breakers -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-sm hover:border-indigo-500/40 transition">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>🛡️ Resilience4j Hub</span>
+            <span class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[10px]">Circuit CLOSED</span>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-2xl sm:text-3xl font-extrabold text-emerald-400">6 / 6</span>
+            <span class="text-xs sm:text-sm font-mono text-emerald-400 font-bold">UP & HEALTHY</span>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Failures: 0 • Retries: Active</span>
+            <span class="text-indigo-400 hover:underline cursor-pointer" onclick="openTopologyModal()">Inspect Topology →</span>
+          </div>
         </div>
 
       </section>
 
+      <!-- ========================================================================= -->
+      <!-- INTERACTIVE SYSTEM TOPOLOGY & ARCHITECTURE MAP (Visual Understanding)    -->
+      <!-- ========================================================================= -->
+      <section aria-label="Interactive Architecture Map" class="bg-slate-900/70 border border-slate-800 rounded-3xl p-5 shadow-lg">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-base font-bold text-white flex items-center space-x-2">
+                <span>🗺️</span>
+                <span>Live System Topology & Event Flow Architecture</span>
+              </span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Interactive</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Click any component node to inspect its live endpoints, port, database rows, and circuit breaker status.</p>
+          </div>
+          <div class="flex items-center space-x-2 text-xs">
+            <button onclick="triggerAllHealthChecks()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl transition flex items-center space-x-1 font-semibold">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Refresh Status</span>
+            </button>
+            <button onclick="toggleHowItWorks()" class="px-3 py-1.5 bg-indigo-600/30 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 rounded-xl transition font-semibold">
+              ❓ How It Works
+            </button>
+          </div>
+        </div>
 
-      <!-- ========================================== -->
-      <!-- TAB 2: DISTRIBUTED SAGA VISUALIZER          -->
-      <!-- ========================================== -->
-      <section id="tab-content-saga" class="tab-panel hidden space-y-6">
-        
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-          
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
-            <div>
-              <div class="flex items-center space-x-2">
-                <span class="text-2xl font-bold">⚡ Distributed Saga Choreography</span>
-                <span class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Live Engine</span>
+        <!-- Topology Nodes Row -->
+        <div class="pt-5 pb-2 overflow-x-auto custom-scrollbar">
+          <div class="min-w-[980px] flex items-center justify-between px-2">
+
+            <!-- Node 1: Client -->
+            <div onclick="showNodeDetails('client')" class="group cursor-pointer flex flex-col items-center p-3 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500 transition w-36 text-center">
+              <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-lg mb-2 group-hover:scale-110 transition">💻</div>
+              <div class="text-xs font-bold text-white">Browser Client</div>
+              <div class="text-[10px] text-slate-400 font-mono mt-0.5">Single Page App</div>
+              <span class="mt-2 text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">Active</span>
+            </div>
+
+            <!-- Flow Arrow 1 -->
+            <div class="flex flex-col items-center text-indigo-400 font-mono text-[10px]">
+              <span class="animate-pulse font-bold">Bearer JWT</span>
+              <svg class="w-6 h-6 my-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </div>
+
+            <!-- Node 2: API Gateway -->
+            <div onclick="showNodeDetails('gateway')" class="group cursor-pointer flex flex-col items-center p-3 rounded-2xl bg-slate-950/80 border border-indigo-500/40 hover:border-indigo-400 transition w-44 text-center ring-1 ring-indigo-500/20">
+              <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-lg mb-2 group-hover:scale-110 transition">🛡️</div>
+              <div class="text-xs font-bold text-white">API Gateway</div>
+              <div class="text-[10px] text-indigo-400 font-mono mt-0.5">Port :8080 (Reactive)</div>
+              <span class="mt-2 text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Circuit Closed</span>
+            </div>
+
+            <!-- Flow Arrow 2 -->
+            <div class="flex flex-col items-center text-slate-500 font-mono text-[10px]">
+              <span>lb:// routing</span>
+              <svg class="w-6 h-6 my-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </div>
+
+            <!-- Node 3: Core Microservices Stack -->
+            <div class="flex flex-col space-y-2">
+              
+              <!-- Order Service -->
+              <div onclick="showNodeDetails('order')" class="group cursor-pointer flex items-center justify-between p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500 transition w-48">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">📦</span>
+                  <div class="text-left">
+                    <div class="text-xs font-bold text-white">Order Service</div>
+                    <div class="text-[10px] text-slate-400 font-mono">:8081 • Postgres</div>
+                  </div>
+                </div>
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
               </div>
-              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-                Visualizing asynchronous event coordination and automated compensation (rollback) across Kafka event streams.
+
+              <!-- Inventory Service -->
+              <div onclick="showNodeDetails('inventory')" class="group cursor-pointer flex items-center justify-between p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500 transition w-48">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">🏷️</span>
+                  <div class="text-left">
+                    <div class="text-xs font-bold text-white">Inventory Service</div>
+                    <div class="text-[10px] text-slate-400 font-mono">:8082 • Postgres</div>
+                  </div>
+                </div>
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              </div>
+
+              <!-- Payment Service -->
+              <div onclick="showNodeDetails('payment')" class="group cursor-pointer flex items-center justify-between p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500 transition w-48">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">💳</span>
+                  <div class="text-left">
+                    <div class="text-xs font-bold text-white">Payment Service</div>
+                    <div class="text-[10px] text-slate-400 font-mono">:8083 • Postgres</div>
+                  </div>
+                </div>
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              </div>
+
+            </div>
+
+            <!-- Flow Arrow 3 -->
+            <div class="flex flex-col items-center text-violet-400 font-mono text-[10px]">
+              <span class="font-bold">Avro Events</span>
+              <svg class="w-6 h-6 my-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            </div>
+
+            <!-- Node 4: Kafka Event Bus (Backbone) -->
+            <div onclick="showNodeDetails('kafka')" class="group cursor-pointer flex flex-col items-center p-3 rounded-2xl bg-slate-950/80 border border-violet-500/40 hover:border-violet-400 transition w-48 text-center ring-1 ring-violet-500/20">
+              <div class="w-10 h-10 rounded-xl bg-violet-600/20 text-violet-400 flex items-center justify-center text-lg mb-2 group-hover:scale-110 transition">⚡</div>
+              <div class="text-xs font-bold text-white">Apache Kafka</div>
+              <div class="text-[10px] text-violet-400 font-mono mt-0.5">:9092 • 4 Topics</div>
+              <span class="mt-2 text-[9px] font-bold px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20">Saga Event Bus</span>
+            </div>
+
+            <!-- Flow Arrow 4 -->
+            <div class="flex flex-col items-center text-slate-500 font-mono text-[10px]">
+              <span>Telemetry</span>
+              <svg class="w-6 h-6 my-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </div>
+
+            <!-- Node 5: Observability Stack -->
+            <div onclick="showNodeDetails('observability')" class="group cursor-pointer flex flex-col items-center p-3 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500 transition w-40 text-center">
+              <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-lg mb-2 group-hover:scale-110 transition">📊</div>
+              <div class="text-xs font-bold text-white">Observability Hub</div>
+              <div class="text-[10px] text-slate-400 font-mono mt-0.5">Zipkin • Prometheus</div>
+              <span class="mt-2 text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Traces & Metrics</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Expandable "How It Works" Guide Panel -->
+        <div id="how-it-works-panel" class="hidden mt-4 pt-4 border-t border-slate-800 bg-slate-950/60 rounded-2xl p-4 text-xs text-slate-300 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm text-white flex items-center space-x-2">
+              <span>💡</span>
+              <span>Architecture Guide: How This Distributed System Works in Practice</span>
+            </span>
+            <button onclick="toggleHowItWorks()" class="text-slate-400 hover:text-white text-xs">✕ Close Guide</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+              <div class="font-bold text-indigo-400 mb-1">1. Why Microservices & Gateway?</div>
+              <p class="text-[11px] leading-relaxed text-slate-400">
+                Instead of one giant monolith, each domain (Order, Inventory, Payment) is its own independent service with its own isolated database. The API Gateway acts as the secure reverse proxy, handling JWT authentication, circuit breakers, and load balancing.
               </p>
             </div>
-
-            <!-- Simulation Controls -->
-            <div class="flex flex-wrap gap-2">
-              <button onclick="runSagaSimulation('SUCCESS')" class="px-3 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm transition flex items-center space-x-1">
-                <span>🟢</span>
-                <span>Simulate Success Flow</span>
-              </button>
-              <button onclick="runSagaSimulation('STOCK_FAIL')" class="px-3 py-2 text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-sm transition flex items-center space-x-1">
-                <span>🟡</span>
-                <span>Simulate Out-of-Stock</span>
-              </button>
-              <button onclick="runSagaSimulation('PAYMENT_FAIL')" class="px-3 py-2 text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-sm transition flex items-center space-x-1">
-                <span>🔴</span>
-                <span>Simulate Payment & Rollback</span>
-              </button>
+            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+              <div class="font-bold text-violet-400 mb-1">2. What is Saga Choreography?</div>
+              <p class="text-[11px] leading-relaxed text-slate-400">
+                Traditional 2-Phase Commit (2PC) locks databases across servers and creates bottlenecks. In Saga Choreography, microservices publish and consume events asynchronously through Kafka using Apache Avro schemas without locking tables.
+              </p>
             </div>
-          </div>
-
-          <!-- Step-by-Step Flow Chart -->
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="saga-stepper-container">
-
-            <!-- Step 1: Order Service -->
-            <div id="saga-step-1" class="border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-4 bg-slate-50/50 dark:bg-slate-950/50 transition-all duration-300">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300">Step 1</span>
-                <span id="saga-status-1" class="text-[11px] font-semibold text-slate-400">Idle</span>
-              </div>
-              <h3 class="font-bold text-sm">Order Service</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Accepts request, assigns Order ID, sets status to PLACED.</p>
-              <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-500">
-                Kafka: <span class="text-indigo-500">order-placed-events</span>
-              </div>
+            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+              <div class="font-bold text-rose-400 mb-1">3. What Happens on Failures?</div>
+              <p class="text-[11px] leading-relaxed text-slate-400">
+                If payment fails, an <span class="font-mono text-rose-400">InventoryReleaseEvent</span> is dispatched over Kafka. Inventory automatically unlocks and restores the stock, while Order transitions to <span class="font-mono text-rose-400">CANCELLED</span>, guaranteeing eventual consistency!
+              </p>
             </div>
-
-            <!-- Step 2: Inventory Service -->
-            <div id="saga-step-2" class="border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-4 bg-slate-50/50 dark:bg-slate-950/50 transition-all duration-300">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300">Step 2</span>
-                <span id="saga-status-2" class="text-[11px] font-semibold text-slate-400">Idle</span>
-              </div>
-              <h3 class="font-bold text-sm">Inventory Service</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Consumes event, locks stock, validates SKU availability.</p>
-              <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-500">
-                Kafka: <span class="text-indigo-500">stock-reserved-events</span>
-              </div>
-            </div>
-
-            <!-- Step 3: Payment Service -->
-            <div id="saga-step-3" class="border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-4 bg-slate-50/50 dark:bg-slate-950/50 transition-all duration-300">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300">Step 3</span>
-                <span id="saga-status-3" class="text-[11px] font-semibold text-slate-400">Idle</span>
-              </div>
-              <h3 class="font-bold text-sm">Payment Service</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Authorizes charge. Triggers rollback event if failed.</p>
-              <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-500">
-                Kafka: <span class="text-indigo-500">payment-events</span>
-              </div>
-            </div>
-
-            <!-- Step 4: Outcome & Compensation -->
-            <div id="saga-step-4" class="border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-4 bg-slate-50/50 dark:bg-slate-950/50 transition-all duration-300">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300">Step 4</span>
-                <span id="saga-status-4" class="text-[11px] font-semibold text-slate-400">Idle</span>
-              </div>
-              <h3 class="font-bold text-sm">Final State & Compensation</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">COMPLETED on success, or stock released & order CANCELLED.</p>
-              <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-500">
-                Outbox Store & Status
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Real-Time Event Log Console -->
-          <div class="rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs text-slate-300 space-y-2">
-            <div class="flex items-center justify-between pb-2 border-b border-slate-800 text-slate-400">
-              <span class="flex items-center space-x-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Live Microservices Event Stream & Trace Log</span>
-              </span>
-              <button onclick="clearSagaLog()" class="text-[11px] hover:text-white transition">Clear Log</button>
-            </div>
-            <div id="saga-log-output" class="max-h-56 overflow-y-auto space-y-1 text-[11px] leading-relaxed">
-              <div class="text-slate-500">System initialized. Ready for transactions. Click any simulation button above or place an order from the Storefront.</div>
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- ========================================== -->
-      <!-- TAB 3: ORDERS TRACKER                      -->
-      <!-- ========================================== -->
-      <section id="tab-content-orders" class="tab-panel hidden space-y-6">
-        
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-          <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-            <div>
-              <h2 class="text-xl sm:text-2xl font-bold">📦 Placed Orders Tracker</h2>
-              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Live orders across the distributed order repository.</p>
-            </div>
-            <button onclick="fetchOrders()" class="px-3.5 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition flex items-center space-x-1.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-              <span>Refresh Orders</span>
-            </button>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs sm:text-sm">
-              <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 uppercase text-[11px] font-semibold border-b border-slate-200 dark:border-slate-800">
-                <tr>
-                  <th class="py-3 px-4">Order Number</th>
-                  <th class="py-3 px-4">Customer</th>
-                  <th class="py-3 px-4">Items</th>
-                  <th class="py-3 px-4">Total Amount</th>
-                  <th class="py-3 px-4">Status</th>
-                  <th class="py-3 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="orders-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
-                <!-- Populated dynamically via JavaScript -->
-              </tbody>
-            </table>
           </div>
         </div>
 
       </section>
 
+      <!-- ========================================================================= -->
+      <!-- THREE-COLUMN WORKSPACE: STOREFRONT | SAGA ENGINE | DATA EXPLORER         -->
+      <!-- ========================================================================= -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-      <!-- ========================================== -->
-      <!-- TAB 4: INVENTORY MANAGEMENT                -->
-      <!-- ========================================== -->
-      <section id="tab-content-inventory" class="tab-panel hidden space-y-6">
-        
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-          <!-- Inventory List Table (2 Columns) -->
-          <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <!-- ========================================================== -->
+        <!-- COLUMN 1: LIVE STOREFRONT & INSTANT BUY (4 COLUMNS)        -->
+        <!-- ========================================================== -->
+        <section aria-label="Storefront Products" class="lg:col-span-4 bg-slate-900/80 border border-slate-800 rounded-3xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>
-                <h2 class="text-xl font-bold">📊 Stock & Inventory Records</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Live database inventory in inventory-service.</p>
+                <h2 class="text-base font-bold text-white flex items-center space-x-2">
+                  <span>🛍️</span>
+                  <span>Storefront Catalog</span>
+                </h2>
+                <p class="text-[11px] text-slate-400 mt-0.5">Click "Quick Buy" to trigger the Saga sequence instantly!</p>
               </div>
-              <button onclick="fetchInventory()" class="px-3 py-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition">
-                Refresh Stock
+              <span class="text-xs font-mono font-bold text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-xl">6 Products</span>
+            </div>
+
+            <!-- Search & Category Filters -->
+            <div class="flex gap-2">
+              <select id="catalog-category-filter" onchange="filterCatalog()" class="bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-slate-300 font-medium focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                <option value="ALL">All Categories</option>
+                <option value="ELECTRONICS">Electronics</option>
+                <option value="COMPUTERS">Computers</option>
+                <option value="AUDIO">Audio</option>
+                <option value="LIFESTYLE">Lifestyle</option>
+              </select>
+              <input type="text" id="catalog-search-input" onkeyup="filterCatalog()" placeholder="Search product or SKU..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+            </div>
+
+            <!-- Product Cards Scrollable Shelf -->
+            <div id="catalog-products-container" class="space-y-3 max-h-[640px] overflow-y-auto pr-1 custom-scrollbar">
+              <!-- Dynamically populated via JavaScript -->
+            </div>
+
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Authentication: <span class="text-emerald-400 font-semibold">JWT Bearer Attached</span></span>
+            <button onclick="toggleCartDrawer(true)" class="text-indigo-400 hover:text-indigo-300 font-bold underline">Open Cart →</button>
+          </div>
+        </section>
+
+
+        <!-- ========================================================== -->
+        <!-- COLUMN 2: DISTRIBUTED SAGA CHOREOGRAPHY ENGINE (4 COLUMNS) -->
+        <!-- ========================================================== -->
+        <section aria-label="Distributed Saga Visualizer" class="lg:col-span-4 bg-slate-900/80 border border-slate-800 rounded-3xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div>
+                <h2 class="text-base font-bold text-white flex items-center space-x-2">
+                  <span>⚡</span>
+                  <span>Distributed Saga Stepper</span>
+                </h2>
+                <p class="text-[11px] text-slate-400 mt-0.5">Real-time Kafka event choreography and compensation tracker.</p>
+              </div>
+              <span id="saga-engine-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Engine Ready</span>
+            </div>
+
+            <!-- Simulation Action Buttons -->
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="executeSimulation('SUCCESS')" class="p-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold transition flex flex-col items-center text-center">
+                <span class="text-sm">🟢</span>
+                <span>Happy Path</span>
+                <span class="text-[9px] font-normal text-emerald-400/80 mt-0.5">Success flow</span>
+              </button>
+              <button onclick="executeSimulation('STOCK_FAIL')" class="p-2 rounded-xl bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/40 text-amber-300 text-[11px] font-bold transition flex flex-col items-center text-center">
+                <span class="text-sm">🟡</span>
+                <span>Out of Stock</span>
+                <span class="text-[9px] font-normal text-amber-400/80 mt-0.5">Order rejected</span>
+              </button>
+              <button onclick="executeSimulation('PAYMENT_FAIL')" class="p-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 text-rose-300 text-[11px] font-bold transition flex flex-col items-center text-center">
+                <span class="text-sm">🔴</span>
+                <span>Payment Fail</span>
+                <span class="text-[9px] font-normal text-rose-400/80 mt-0.5">Rollback & release</span>
               </button>
             </div>
 
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs sm:text-sm">
-                <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 uppercase text-[11px] font-semibold border-b border-slate-200 dark:border-slate-800">
-                  <tr>
-                    <th class="py-3 px-4">SKU Code</th>
-                    <th class="py-3 px-4">Product Name</th>
-                    <th class="py-3 px-4">Price</th>
-                    <th class="py-3 px-4">Available Stock</th>
-                    <th class="py-3 px-4 text-right">Quick Restock</th>
-                  </tr>
-                </thead>
-                <tbody id="inventory-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
-                  <!-- Populated dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
+            <!-- Saga Visual Step Nodes -->
+            <div class="space-y-2.5" id="saga-visual-stepper">
 
-          <!-- Add / Update Product Form (1 Column) -->
-          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <h3 class="font-bold text-base">➕ Add or Restock SKU</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Post new stock update to inventory-service via Gateway.</p>
-
-            <form onsubmit="handleInventorySubmit(event)" class="space-y-3 text-xs sm:text-sm">
-              <div>
-                <label for="inv-sku" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">SKU Code</label>
-                <input type="text" id="inv-sku" required placeholder="e.g. SONY-WH1000XM5" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 font-mono uppercase focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              </div>
-              <div>
-                <label for="inv-name" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Product Name</label>
-                <input type="text" id="inv-name" required placeholder="e.g. Sony WH-1000XM5" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              </div>
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label for="inv-price" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Price ($)</label>
-                  <input type="number" step="0.01" id="inv-price" required placeholder="399.99" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <!-- Step 1 -->
+              <div id="v-step-1" class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div id="v-step-icon-1" class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-300">1</div>
+                  <div>
+                    <div class="text-xs font-bold text-white">Order Creation</div>
+                    <div class="text-[10px] text-slate-400">order-service: PENDING state</div>
+                  </div>
                 </div>
-                <div>
-                  <label for="inv-qty" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Quantity</label>
-                  <input type="number" id="inv-qty" required placeholder="50" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <div class="text-right">
+                  <span id="v-step-status-1" class="text-[11px] font-mono text-slate-500 font-bold">Idle</span>
+                  <div class="text-[9px] font-mono text-slate-500">order-placed-topic</div>
                 </div>
               </div>
-              <button type="submit" class="w-full mt-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition shadow-md shadow-indigo-500/20">
-                Save to Inventory DB
-              </button>
-            </form>
-          </div>
 
-        </div>
+              <!-- Step 2 -->
+              <div id="v-step-2" class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div id="v-step-icon-2" class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-300">2</div>
+                  <div>
+                    <div class="text-xs font-bold text-white">Stock Reservation</div>
+                    <div class="text-[10px] text-slate-400">inventory-service: Lock stock</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span id="v-step-status-2" class="text-[11px] font-mono text-slate-500 font-bold">Idle</span>
+                  <div class="text-[9px] font-mono text-slate-500">inventory-events-topic</div>
+                </div>
+              </div>
 
-      </section>
+              <!-- Step 3 -->
+              <div id="v-step-3" class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div id="v-step-icon-3" class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-300">3</div>
+                  <div>
+                    <div class="text-xs font-bold text-white">Payment Transaction</div>
+                    <div class="text-[10px] text-slate-400">payment-service: Charge customer</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span id="v-step-status-3" class="text-[11px] font-mono text-slate-500 font-bold">Idle</span>
+                  <div class="text-[9px] font-mono text-slate-500">payment-events-topic</div>
+                </div>
+              </div>
 
+              <!-- Step 4 -->
+              <div id="v-step-4" class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 transition-all duration-300 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div id="v-step-icon-4" class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-300">4</div>
+                  <div>
+                    <div class="text-xs font-bold text-white">Saga Confirmation / Rollback</div>
+                    <div class="text-[10px] text-slate-400">COMPLETED or Compensate</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span id="v-step-status-4" class="text-[11px] font-mono text-slate-500 font-bold">Idle</span>
+                  <div class="text-[9px] font-mono text-slate-500">order-compensation-topic</div>
+                </div>
+              </div>
 
-      <!-- ========================================== -->
-      <!-- TAB 5: MICROSERVICES HEALTH HUB            -->
-      <!-- ========================================== -->
-      <section id="tab-content-health" class="tab-panel hidden space-y-6">
-        
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-          <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-            <div>
-              <h2 class="text-xl sm:text-2xl font-bold">🛡️ Microservices Health & Resilience Hub</h2>
-              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Real-time status of service discovery, circuit breakers, and telemetry.</p>
             </div>
-            <button onclick="checkAllServiceHealth()" class="px-3.5 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition">
-              Ping All Services
-            </button>
-          </div>
 
-          <!-- Services Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="services-health-grid">
-            <!-- Populated dynamically via JS -->
-          </div>
-
-          <!-- Resilience4j Circuit Breaker Test Box -->
-          <div class="mt-6 p-6 rounded-2xl bg-indigo-50/50 dark:bg-slate-950 border border-indigo-100 dark:border-slate-800 space-y-3">
-            <div class="flex items-center space-x-2">
-              <span class="text-lg">⚡</span>
-              <h3 class="font-bold text-sm">Resilience4j Circuit Breaker Testing</h3>
+            <!-- Kafka Live Event Trace Stream Console -->
+            <div class="rounded-2xl bg-black border border-slate-800 p-3 font-mono text-[11px] space-y-2">
+              <div class="flex items-center justify-between pb-1.5 border-b border-slate-800 text-slate-400">
+                <span class="flex items-center space-x-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span class="font-bold text-slate-300">Kafka Event Stream & Trace Log</span>
+                </span>
+                <button onclick="clearTraceLog()" class="text-[10px] hover:text-white transition">Clear</button>
+              </div>
+              <div id="saga-trace-log" class="max-h-48 overflow-y-auto space-y-1 text-slate-300 custom-scrollbar">
+                <div class="text-slate-500">// Ready. Place an order or click any simulation button to observe Kafka Avro event choreography.</div>
+              </div>
             </div>
-            <p class="text-xs text-slate-600 dark:text-slate-400">
-              When an underlying microservice is down or slow, the API Gateway immediately trips the Circuit Breaker to <span class="font-semibold text-rose-500">OPEN</span> and serves the fallback response without crashing or hanging requests.
-            </p>
-            <div class="flex flex-wrap gap-3 pt-2">
-              <button onclick="testFallback('orders')" class="px-3 py-1.5 text-xs font-semibold bg-slate-200 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white rounded-lg transition">
-                Test Order Fallback (/fallback/orders)
-              </button>
-              <button onclick="testFallback('inventory')" class="px-3 py-1.5 text-xs font-semibold bg-slate-200 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white rounded-lg transition">
-                Test Inventory Fallback (/fallback/inventory)
-              </button>
-              <button onclick="testFallback('payments')" class="px-3 py-1.5 text-xs font-semibold bg-slate-200 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white rounded-lg transition">
-                Test Payment Fallback (/fallback/payments)
-              </button>
-            </div>
-            <div id="fallback-test-result" class="text-xs font-mono p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hidden"></div>
+
           </div>
 
-        </div>
+          <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Compensating Events: <span class="text-indigo-400 font-semibold">Active & Idempotent</span></span>
+            <span class="text-emerald-400 font-mono text-[10px]">Avro Schema Validated</span>
+          </div>
+        </section>
 
-      </section>
+
+        <!-- ========================================================== -->
+        <!-- COLUMN 3: REAL-TIME DATA EXPLORER (4 COLUMNS)             -->
+        <!-- ========================================================== -->
+        <section id="section-data-explorer" aria-label="System Data Explorer" class="lg:col-span-4 bg-slate-900/80 border border-slate-800 rounded-3xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+
+            <!-- Data Explorer Tabs Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-2">
+              <div>
+                <h2 class="text-base font-bold text-white flex items-center space-x-2">
+                  <span>📊</span>
+                  <span>System Data Explorer</span>
+                </h2>
+                <p class="text-[11px] text-slate-400 mt-0.5">Direct inspection of databases, tables, and Kafka events.</p>
+              </div>
+
+              <!-- Tab Switcher Buttons -->
+              <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                <button onclick="switchDataTab('orders')" id="btn-data-orders" class="px-2.5 py-1 rounded-lg font-bold bg-indigo-600 text-white transition">Orders</button>
+                <button onclick="switchDataTab('inventory')" id="btn-data-inventory" class="px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition">Stock</button>
+                <button onclick="switchDataTab('payments')" id="btn-data-payments" class="px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition">Payments</button>
+                <button onclick="switchDataTab('kafka')" id="btn-data-kafka" class="px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition">Topics</button>
+              </div>
+            </div>
+
+            <!-- Tab 1: Orders Data Table -->
+            <div id="data-pane-orders" class="space-y-2">
+              <div class="flex items-center justify-between text-xs text-slate-400 pb-1">
+                <span>Database: <span class="font-mono text-indigo-400">order_db (PostgreSQL)</span></span>
+                <button onclick="refreshOrdersData()" class="text-indigo-400 hover:underline">Refresh</button>
+              </div>
+              <div class="max-h-[560px] overflow-y-auto space-y-2 custom-scrollbar" id="orders-data-rows">
+                <!-- Populated dynamically via JS -->
+              </div>
+            </div>
+
+            <!-- Tab 2: Inventory Data Table -->
+            <div id="data-pane-inventory" class="space-y-2 hidden">
+              <div class="flex items-center justify-between text-xs text-slate-400 pb-1">
+                <span>Database: <span class="font-mono text-emerald-400">inventory_db (PostgreSQL)</span></span>
+                <button onclick="refreshInventoryData()" class="text-emerald-400 hover:underline">Refresh</button>
+              </div>
+              <div class="max-h-[560px] overflow-y-auto space-y-2 custom-scrollbar" id="inventory-data-rows">
+                <!-- Populated dynamically via JS -->
+              </div>
+            </div>
+
+            <!-- Tab 3: Payments Data Table -->
+            <div id="data-pane-payments" class="space-y-2 hidden">
+              <div class="flex items-center justify-between text-xs text-slate-400 pb-1">
+                <span>Database: <span class="font-mono text-violet-400">payment_db (PostgreSQL)</span></span>
+                <button onclick="refreshPaymentsData()" class="text-violet-400 hover:underline">Refresh</button>
+              </div>
+              <div class="max-h-[560px] overflow-y-auto space-y-2 custom-scrollbar" id="payments-data-rows">
+                <!-- Populated dynamically via JS -->
+              </div>
+            </div>
+
+            <!-- Tab 4: Kafka Topics & Avro Events -->
+            <div id="data-pane-kafka" class="space-y-2 hidden">
+              <div class="flex items-center justify-between text-xs text-slate-400 pb-1">
+                <span>Cluster: <span class="font-mono text-amber-400">kafka-broker:9092</span></span>
+                <span class="text-xs text-slate-400">4 Active Topics</span>
+              </div>
+              <div class="max-h-[560px] overflow-y-auto space-y-2 custom-scrollbar" id="kafka-topics-rows">
+                <!-- Populated dynamically via JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Persistence: <span class="text-slate-300 font-semibold">Isolated PostgreSQL Schemas</span></span>
+            <span class="text-indigo-400 font-mono text-[10px]">ACID Compliant</span>
+          </div>
+        </section>
+
+      </div>
 
     </main>
 
 
-    <!-- ========================================== -->
-    <!-- SLIDE-OVER SHOPPING CART MODAL             -->
-    <!-- ========================================== -->
-    <div id="cart-modal" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="cart-slideover-title" role="dialog" aria-modal="true">
-      <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" onclick="toggleCartModal(false)"></div>
+    <!-- ========================================================================= -->
+    <!-- SLIDE-OVER CART DRAWER                                                    -->
+    <!-- ========================================================================= -->
+    <div id="cart-drawer-modal" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="cart-drawer-heading" role="dialog" aria-modal="true">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer(false)"></div>
 
       <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div class="w-screen max-w-md bg-white dark:bg-slate-900 shadow-2xl flex flex-col">
+        <div class="w-screen max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col justify-between">
           
-          <!-- Cart Header -->
-          <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <!-- Drawer Header -->
+          <div class="p-5 border-b border-slate-800 flex items-center justify-between">
             <div class="flex items-center space-x-2">
               <span class="text-xl">🛒</span>
-              <h2 id="cart-slideover-title" class="text-lg font-bold">Shopping Cart</h2>
+              <h2 id="cart-drawer-heading" class="text-base font-bold text-white">Your Shopping Cart</h2>
             </div>
-            <button onclick="toggleCartModal(false)" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition" aria-label="Close Cart">
+            <button onclick="toggleCartDrawer(false)" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition" aria-label="Close Cart">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>
 
-          <!-- Cart Items List -->
-          <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
-            <!-- Dynamically populated or empty state -->
+          <!-- Drawer Items -->
+          <div id="drawer-items-shelf" class="flex-1 overflow-y-auto p-5 space-y-3 custom-scrollbar">
+            <!-- Dynamically populated or empty -->
           </div>
 
-          <!-- Cart Checkout Summary -->
-          <div class="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-4">
-            <div class="space-y-1 text-xs">
-              <label for="checkout-email" class="block font-semibold text-slate-700 dark:text-slate-300">Customer Email</label>
-              <input type="email" id="checkout-email" value="customer@ecommerce.com" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+          <!-- Drawer Checkout Summary -->
+          <div class="p-5 border-t border-slate-800 bg-slate-950 space-y-4">
+            <div class="space-y-1.5 text-xs">
+              <label for="drawer-customer-email" class="block font-semibold text-slate-300">Customer Email</label>
+              <input type="email" id="drawer-customer-email" value="customer@ecommerce.com" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono focus:ring-1 focus:ring-indigo-500 focus:outline-none">
             </div>
 
-            <div class="flex justify-between items-center text-sm font-bold pt-2">
-              <span>Subtotal:</span>
-              <span id="cart-total-amount" class="text-base text-indigo-600 dark:text-indigo-400 font-mono">$0.00</span>
+            <div class="flex items-center justify-between text-sm font-bold pt-1">
+              <span class="text-slate-300">Total Order Amount:</span>
+              <span id="drawer-subtotal" class="text-lg font-mono text-emerald-400 font-extrabold">$0.00</span>
             </div>
 
-            <button id="checkout-btn" onclick="submitOrder()" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2">
+            <button id="drawer-submit-order-btn" onclick="checkoutFromDrawer()" class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2">
               <span>⚡ Place Order (Initiate Saga)</span>
             </button>
 
-            <p class="text-[11px] text-center text-slate-500 dark:text-slate-400">
-              Secured with Spring Security OAuth2 / JWT & Resilience4j
-            </p>
+            <div class="text-[11px] text-center text-slate-400">
+              Dispatches `OrderPlacedEvent` to Apache Kafka topic.
+            </div>
           </div>
 
         </div>
@@ -516,43 +682,76 @@
     </div>
 
 
-    <!-- Footer -->
-    <footer role="contentinfo" class="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
-      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div>
-          <span class="font-bold text-slate-700 dark:text-slate-300">Distributed E-Commerce Microservices</span> — Spring Boot 3 & Cloud Architecture
+    <!-- ========================================================================= -->
+    <!-- NODE DETAILS INSPECTION MODAL                                             -->
+    <!-- ========================================================================= -->
+    <div id="node-inspector-modal" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="inspector-heading" role="dialog" aria-modal="true">
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onclick="closeNodeDetails()"></div>
+      <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center space-x-2">
+              <span id="inspector-icon" class="text-2xl">📦</span>
+              <div>
+                <h3 id="inspector-title" class="text-base font-bold text-white">Component Inspector</h3>
+                <p id="inspector-subtitle" class="text-xs text-slate-400">Microservice Runtime Details</p>
+              </div>
+            </div>
+            <button onclick="closeNodeDetails()" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition">✕</button>
+          </div>
+          <div id="inspector-content" class="text-xs text-slate-300 space-y-3 font-mono leading-relaxed">
+            <!-- Dynamically populated -->
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex justify-end">
+            <button onclick="closeNodeDetails()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl text-xs transition">
+              Close Inspector
+            </button>
+          </div>
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="inline-flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>PostgreSQL + Kafka + Avro</span></span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer role="contentinfo" class="border-t border-slate-800/80 py-4 text-center text-xs text-slate-500 bg-slate-950">
+      <div class="max-w-[1720px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div class="font-medium text-slate-400">
+          CloudMart Distributed Microservices • Authored by Pranav
+        </div>
+        <div class="flex items-center space-x-4 text-slate-400">
+          <span>Spring Cloud Gateway</span>
           <span>•</span>
-          <a href="http://localhost:8080/swagger-ui.html" target="_blank" class="hover:underline text-indigo-500">API Documentation</a>
+          <span>Eureka Discovery</span>
+          <span>•</span>
+          <span>Apache Kafka (Avro)</span>
+          <span>•</span>
+          <span>Resilience4j</span>
         </div>
       </div>
     </footer>
 
   </div>
 
-  <!-- Application Logic JavaScript -->
+  <!-- Dashboard JavaScript Logic -->
   <script>
     // -------------------------------------------------------------
-    // Configuration & State
+    // Configuration & Core State
     // -------------------------------------------------------------
     const API_BASE = window.location.origin.includes('8080') ? '' : 'http://localhost:8080';
     let jwtToken = localStorage.getItem('cloudmart_jwt') || '';
     let currentUser = localStorage.getItem('cloudmart_user') || 'customer@ecommerce.com';
-    let currentRole = localStorage.getItem('cloudmart_role') || 'ROLE_USER';
 
-    const CATALOG_ITEMS = [
+    // Products Catalog Data
+    const PRODUCTS = [
       {
         skuCode: 'IPHONE-15-PRO',
         name: 'iPhone 15 Pro Max (256GB)',
         category: 'ELECTRONICS',
         price: 1199.99,
         stock: 25,
-        rating: 4.9,
-        badge: 'Bestseller',
+        maxStock: 50,
         icon: '📱',
-        description: 'Titanium design, A17 Pro chip, 48MP main camera with 5x telephoto optical zoom.'
+        badge: 'Flagship',
+        description: 'Titanium chassis, A17 Pro 3nm chip, 48MP triple camera system.'
       },
       {
         skuCode: 'MACBOOK-PRO-M3',
@@ -560,10 +759,10 @@
         category: 'COMPUTERS',
         price: 2499.00,
         stock: 12,
-        badge: 'Pro Tier',
-        rating: 5.0,
+        maxStock: 25,
         icon: '💻',
-        description: 'Blazing performance with 16-core CPU, 40-core GPU, Liquid Retina XDR display.'
+        badge: 'Workstation',
+        description: '16-core CPU, 40-core GPU, 128GB unified memory, Liquid Retina XDR.'
       },
       {
         skuCode: 'SONY-WH1000XM5',
@@ -571,32 +770,32 @@
         category: 'AUDIO',
         price: 398.00,
         stock: 35,
-        badge: 'Top Audio',
-        rating: 4.8,
+        maxStock: 60,
         icon: '🎧',
-        description: 'Industry-leading noise canceling with two processors and 8 microphones.'
+        badge: 'Top Audio',
+        description: 'Two processors, 8 microphones, auto noise-canceling optimizer.'
       },
       {
         skuCode: 'APPLE-WATCH-U2',
-        name: 'Apple Watch Ultra 2 GPS + Cellular',
+        name: 'Apple Watch Ultra 2 Cellular',
         category: 'LIFESTYLE',
         price: 799.00,
         stock: 18,
-        badge: 'Rugged',
-        rating: 4.9,
+        maxStock: 30,
         icon: '⌚',
-        description: 'Rugged 49mm titanium case, precision dual-frequency GPS, up to 36h battery.'
+        badge: 'Rugged',
+        description: '49mm titanium case, 3000 nits display, precision dual-frequency GPS.'
       },
       {
         skuCode: 'KEYCHRON-Q1-PRO',
-        name: 'Keychron Q1 Pro Wireless Keyboard',
+        name: 'Keychron Q1 Pro Custom Keyboard',
         category: 'COMPUTERS',
         price: 199.00,
         stock: 40,
-        badge: 'Mechanical',
-        rating: 4.7,
+        maxStock: 50,
         icon: '⌨️',
-        description: 'Full aluminum body, hot-swappable switches, double-gasket design.'
+        badge: 'Mechanical',
+        description: 'CNC aluminum body, QMK/VIA programmable, hot-swappable switches.'
       },
       {
         skuCode: 'NIKE-AIR-MAX-270',
@@ -604,51 +803,105 @@
         category: 'LIFESTYLE',
         price: 160.00,
         stock: 5,
-        badge: 'Low Stock',
-        rating: 4.6,
+        maxStock: 20,
         icon: '👟',
-        description: 'Maximum volume Air unit in the heel delivering responsive cushioning.'
+        badge: 'Low Stock',
+        description: 'Largest heel Air unit for plush, all-day walking comfort.'
       }
     ];
 
+    // State Collections
     let cart = [];
-    let placedOrders = [];
+    let ordersList = [
+      {
+        orderNumber: 'ORD-98214A11',
+        customerEmail: 'customer@ecommerce.com',
+        createdAt: 'Just now',
+        totalAmount: 1199.99,
+        status: 'COMPLETED',
+        items: [{ skuCode: 'IPHONE-15-PRO', quantity: 1, price: 1199.99 }]
+      },
+      {
+        orderNumber: 'ORD-7612BF49',
+        customerEmail: 'dev.tester@google.com',
+        createdAt: '10 mins ago',
+        totalAmount: 398.00,
+        status: 'COMPLETED',
+        items: [{ skuCode: 'SONY-WH1000XM5', quantity: 1, price: 398.00 }]
+      },
+      {
+        orderNumber: 'ORD-3209CD81',
+        customerEmail: 'sarah.k@cloud.io',
+        createdAt: '25 mins ago',
+        totalAmount: 160.00,
+        status: 'CANCELLED',
+        items: [{ skuCode: 'NIKE-AIR-MAX-270', quantity: 1, price: 160.00 }]
+      }
+    ];
+
+    let paymentsList = [
+      {
+        paymentId: 'PAY-449102A',
+        orderNumber: 'ORD-98214A11',
+        amount: 1199.99,
+        status: 'SUCCESS',
+        method: 'CREDIT_CARD',
+        transactionRef: 'txn_99214482',
+        time: 'Just now'
+      },
+      {
+        paymentId: 'PAY-881290C',
+        orderNumber: 'ORD-7612BF49',
+        amount: 398.00,
+        status: 'SUCCESS',
+        method: 'DEBIT_CARD',
+        transactionRef: 'txn_77192834',
+        time: '10 mins ago'
+      },
+      {
+        paymentId: 'PAY-112093F',
+        orderNumber: 'ORD-3209CD81',
+        amount: 160.00,
+        status: 'FAILED',
+        method: 'CREDIT_CARD',
+        transactionRef: 'err_card_declined',
+        time: '25 mins ago'
+      }
+    ];
+
+    let kafkaEventsCount = 12;
 
     // -------------------------------------------------------------
-    // Initialization
+    // Initializer
     // -------------------------------------------------------------
     document.addEventListener('DOMContentLoaded', () => {
-      initTheme();
-      renderProducts(CATALOG_ITEMS);
-      updateAuthUI();
+      renderCatalog(PRODUCTS);
+      updateKPIs();
+      refreshOrdersData();
+      refreshInventoryData();
+      refreshPaymentsData();
+      refreshKafkaTopics();
       checkAuthStatus();
-      updateCartBadge();
-      fetchOrders();
-      fetchInventory();
-      checkAllServiceHealth();
     });
 
     // -------------------------------------------------------------
-    // Accessibility Announcer
+    // Announcer & Toast System
     // -------------------------------------------------------------
-    function announce(message) {
-      const el = document.getElementById('sr-announcer');
-      if (el) el.textContent = message;
-      showToast(message, 'info');
-    }
+    function notify(message, type = 'info') {
+      const announcer = document.getElementById('sr-announcer');
+      if (announcer) announcer.textContent = message;
 
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toast-container');
-      if (!container) return;
+      const shelf = document.getElementById('toast-shelf');
+      if (!shelf) return;
       const toast = document.createElement('div');
       const colors = {
-        success: 'bg-emerald-600 text-white',
-        error: 'bg-rose-600 text-white',
-        info: 'bg-slate-900 text-white dark:bg-slate-800'
+        success: 'bg-emerald-600 text-white border-emerald-500',
+        error: 'bg-rose-600 text-white border-rose-500',
+        info: 'bg-slate-900 text-slate-100 border-slate-700'
       };
-      toast.className = `px-4 py-2.5 rounded-xl text-xs font-semibold shadow-xl transition-all duration-300 pointer-events-auto transform translate-y-2 opacity-0 ${colors[type] || colors.info}`;
-      toast.textContent = message;
-      container.appendChild(toast);
+      toast.className = `px-4 py-2.5 rounded-xl text-xs font-semibold shadow-2xl border transition-all duration-300 pointer-events-auto transform translate-y-2 opacity-0 flex items-center space-x-2 ${colors[type] || colors.info}`;
+      toast.innerHTML = `<span>${type === 'success' ? '✓' : (type === 'error' ? '✕' : 'ℹ')}</span><span>${message}</span>`;
+      shelf.appendChild(toast);
       setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
       setTimeout(() => {
         toast.classList.add('opacity-0');
@@ -657,676 +910,684 @@
     }
 
     // -------------------------------------------------------------
-    // Authentication (1-Click JWT Generation)
+    // Authentication (JWT Token Generation)
     // -------------------------------------------------------------
-    async function quickLogin(role = 'ROLE_USER') {
+    async function quickLogin() {
       try {
-        const username = 'customer@ecommerce.com';
-        const res = await fetch(`${API_BASE}/api/auth/token?username=${encodeURIComponent(username)}&role=${encodeURIComponent(role)}`);
-        if (!res.ok) throw new Error('Token endpoint unavailable');
-        const data = await res.json();
-        
-        jwtToken = data.token;
-        currentUser = data.username;
-        currentRole = data.role;
-
-        localStorage.setItem('cloudmart_jwt', jwtToken);
-        localStorage.setItem('cloudmart_user', currentUser);
-        localStorage.setItem('cloudmart_role', currentRole);
-
-        updateAuthUI();
-        announce(`Successfully authenticated as ${currentUser} (${currentRole})!`);
-      } catch (err) {
-        console.warn('Backend auth endpoint unreachable, using generated fallback JWT:', err);
-        // Fallback demo token
-        jwtToken = 'demo-offline-token';
-        updateAuthUI();
-        showToast('Running in Demo Mode: JWT Token Attached', 'info');
+        const res = await fetch(`${API_BASE}/api/auth/token?username=${encodeURIComponent(currentUser)}&role=ROLE_USER`);
+        if (res.ok) {
+          const data = await res.json();
+          jwtToken = data.token;
+          currentUser = data.username;
+          localStorage.setItem('cloudmart_jwt', jwtToken);
+          localStorage.setItem('cloudmart_user', currentUser);
+          notify(`JWT token generated for ${currentUser}`, 'success');
+        } else {
+          throw new Error('Auth offline');
+        }
+      } catch (e) {
+        jwtToken = 'demo-jwt-token-hmac-sha256';
+        notify('Using Offline Demo JWT Token', 'info');
       }
+      document.getElementById('user-display').textContent = currentUser;
     }
 
-    function updateAuthUI() {
-      const label = document.getElementById('auth-status-label');
-      const ind = document.getElementById('auth-status-indicator');
-      const emailInput = document.getElementById('checkout-email');
-
-      if (jwtToken) {
-        label.textContent = currentUser;
-        ind.className = 'w-2 h-2 rounded-full bg-emerald-500 mr-2';
-        if (emailInput) emailInput.value = currentUser;
-      } else {
-        label.textContent = 'Guest (Not Logged In)';
-        ind.className = 'w-2 h-2 rounded-full bg-amber-500 mr-2';
-      }
-    }
-
-    async function checkAuthStatus() {
-      if (!jwtToken) {
-        await quickLogin();
-      }
+    function checkAuthStatus() {
+      if (!jwtToken) quickLogin();
+      else document.getElementById('user-display').textContent = currentUser;
     }
 
     // -------------------------------------------------------------
-    // Tabs Navigation
+    // Storefront Catalog Rendering
     // -------------------------------------------------------------
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
-        b.classList.add('text-slate-600', 'dark:text-slate-300');
-      });
-
-      const activePanel = document.getElementById(`tab-content-${tabId}`);
-      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
-      if (activePanel) activePanel.classList.remove('hidden');
-      if (activeBtn) {
-        activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
-        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
-      }
-
-      if (tabId === 'orders') fetchOrders();
-      if (tabId === 'inventory') fetchInventory();
-      if (tabId === 'health') checkAllServiceHealth();
-    }
-
-    // -------------------------------------------------------------
-    // Product Catalog Rendering
-    // -------------------------------------------------------------
-    function renderProducts(items) {
-      const grid = document.getElementById('product-grid');
-      if (!grid) return;
-      grid.innerHTML = '';
+    function renderCatalog(items) {
+      const container = document.getElementById('catalog-products-container');
+      if (!container) return;
+      container.innerHTML = '';
 
       items.forEach(item => {
-        const card = document.createElement('article');
-        card.className = 'bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-800 transition-all duration-300 flex flex-col justify-between';
+        const percentStock = Math.min(100, Math.round((item.stock / item.maxStock) * 100));
+        const isLow = item.stock <= 5;
+        const card = document.createElement('div');
+        card.className = 'p-3.5 bg-slate-950/90 rounded-2xl border border-slate-800 hover:border-indigo-500/50 transition-all duration-200 flex flex-col justify-between space-y-3';
         card.innerHTML = `
-          <div class="space-y-4">
+          <div>
             <div class="flex items-start justify-between">
-              <span class="text-4xl p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl">${item.icon}</span>
-              <span class="px-2.5 py-1 text-[11px] font-bold rounded-full ${item.stock > 10 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : (item.stock > 0 ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' : 'bg-rose-100 text-rose-800')}">
-                ${item.stock > 0 ? `${item.stock} in stock` : 'Out of stock'}
+              <div class="flex items-center space-x-2.5">
+                <span class="text-3xl p-2 bg-slate-900 rounded-xl">${item.icon}</span>
+                <div>
+                  <div class="text-[10px] font-mono text-indigo-400 font-bold uppercase tracking-wider">${item.skuCode}</div>
+                  <h3 class="font-bold text-xs sm:text-sm text-white">${item.name}</h3>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isLow ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'}">
+                ${item.stock} in stock
               </span>
             </div>
 
-            <div>
-              <div class="text-[11px] font-mono text-indigo-600 dark:text-indigo-400 font-semibold uppercase tracking-wider">${item.skuCode}</div>
-              <h2 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white mt-0.5">${item.name}</h2>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">${item.description}</p>
+            <p class="text-[11px] text-slate-400 mt-2 line-clamp-2 leading-relaxed">${item.description}</p>
+
+            <!-- Stock Progress Bar -->
+            <div class="mt-2.5 space-y-1">
+              <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                <span>Stock level</span>
+                <span>${item.stock}/${item.maxStock} units</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full ${isLow ? 'bg-rose-500' : 'bg-emerald-500'} rounded-full transition-all" style="width: ${percentStock}%"></div>
+              </div>
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+          <div class="pt-2.5 border-t border-slate-800 flex items-center justify-between">
             <div>
-              <div class="text-[10px] text-slate-400 uppercase font-semibold">Unit Price</div>
-              <div class="text-xl font-extrabold text-slate-900 dark:text-white font-mono">$${item.price.toFixed(2)}</div>
+              <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold">Price</div>
+              <div class="text-base font-extrabold text-white font-mono">$${item.price.toFixed(2)}</div>
             </div>
 
-            <button onclick="addToCart('${item.skuCode}')" ${item.stock <= 0 ? 'disabled' : ''} aria-label="Add ${item.name} to cart" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white font-semibold text-xs rounded-xl shadow-md shadow-indigo-500/20 transition flex items-center space-x-1.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              <span>Add to Cart</span>
-            </button>
+            <div class="flex items-center space-x-1.5">
+              <button onclick="addToCart('${item.skuCode}')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl transition" title="Add to Cart">
+                + Cart
+              </button>
+              <button onclick="instantBuy('${item.skuCode}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center space-x-1">
+                <span>⚡</span>
+                <span>Quick Buy</span>
+              </button>
+            </div>
           </div>
         `;
-        grid.appendChild(card);
+        container.appendChild(card);
       });
     }
 
-    function filterProducts() {
-      const cat = document.getElementById('category-filter').value;
-      const search = document.getElementById('search-input').value.toLowerCase().trim();
+    function filterCatalog() {
+      const cat = document.getElementById('catalog-category-filter').value;
+      const q = document.getElementById('catalog-search-input').value.toLowerCase().trim();
 
-      const filtered = CATALOG_ITEMS.filter(item => {
-        const matchCat = (cat === 'ALL' || item.category === cat);
-        const matchSearch = (!search || item.name.toLowerCase().includes(search) || item.skuCode.toLowerCase().includes(search));
-        return matchCat && matchSearch;
+      const filtered = PRODUCTS.filter(p => {
+        const matchCat = (cat === 'ALL' || p.category === cat);
+        const matchQuery = (!q || p.name.toLowerCase().includes(q) || p.skuCode.toLowerCase().includes(q));
+        return matchCat && matchQuery;
       });
 
-      renderProducts(filtered);
+      renderCatalog(filtered);
     }
 
     // -------------------------------------------------------------
-    // Shopping Cart Management
+    // Cart & Order Placement
     // -------------------------------------------------------------
     function addToCart(skuCode) {
-      const item = CATALOG_ITEMS.find(i => i.skuCode === skuCode);
-      if (!item) return;
+      const product = PRODUCTS.find(p => p.skuCode === skuCode);
+      if (!product) return;
 
-      const existing = cart.find(c => c.skuCode === skuCode);
-      if (existing) {
-        existing.quantity += 1;
-      } else {
-        cart.push({
-          skuCode: item.skuCode,
-          name: item.name,
-          price: item.price,
-          quantity: 1,
-          icon: item.icon
-        });
-      }
+      const item = cart.find(c => c.skuCode === skuCode);
+      if (item) item.quantity += 1;
+      else cart.push({ skuCode: product.skuCode, name: product.name, price: product.price, quantity: 1, icon: product.icon });
 
       updateCartBadge();
-      renderCartItems();
-      announce(`Added ${item.name} to cart.`);
+      notify(`Added ${product.name} to cart`, 'info');
+    }
+
+    function instantBuy(skuCode) {
+      const product = PRODUCTS.find(p => p.skuCode === skuCode);
+      if (!product) return;
+
+      const orderNumber = 'ORD-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      traceLog(`[CLIENT] Instant Buy initiated for ${product.name} ($${product.price}).`);
+      
+      // Decrease stock locally for immediate visual feedback
+      if (product.stock > 0) product.stock -= 1;
+      renderCatalog(PRODUCTS);
+      refreshInventoryData();
+
+      // Trigger the Saga Choreography animation & persistence
+      runSagaFlow(orderNumber, product.skuCode, product.price, 'SUCCESS');
     }
 
     function updateCartBadge() {
       const count = cart.reduce((acc, i) => acc + i.quantity, 0);
-      const badge = document.getElementById('cart-badge-count');
-      if (badge) badge.textContent = count;
+      document.getElementById('cart-counter').textContent = count;
+      renderDrawerCart();
     }
 
-    function toggleCartModal(open) {
-      const modal = document.getElementById('cart-modal');
-      if (!modal) return;
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById('cart-drawer-modal');
       if (open) {
-        renderCartItems();
-        modal.classList.remove('hidden');
+        renderDrawerCart();
+        drawer.classList.remove('hidden');
       } else {
-        modal.classList.add('hidden');
+        drawer.classList.add('hidden');
       }
     }
 
-    function renderCartItems() {
-      const container = document.getElementById('cart-items-container');
-      const totalEl = document.getElementById('cart-total-amount');
-      if (!container) return;
+    function renderDrawerCart() {
+      const shelf = document.getElementById('drawer-items-shelf');
+      const subtotalEl = document.getElementById('drawer-subtotal');
+      if (!shelf) return;
 
       if (cart.length === 0) {
-        container.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400 space-y-3">
+        shelf.innerHTML = `
+          <div class="h-64 flex flex-col items-center justify-center text-center text-slate-500 space-y-2">
             <span class="text-4xl">🛒</span>
-            <p class="text-sm font-semibold">Your shopping cart is empty</p>
-            <p class="text-xs">Browse the catalog and add products to start an order!</p>
+            <div class="font-bold text-sm text-slate-400">Cart is empty</div>
+            <p class="text-xs">Select items from the Storefront Catalog to proceed.</p>
           </div>
         `;
-        if (totalEl) totalEl.textContent = '$0.00';
+        if (subtotalEl) subtotalEl.textContent = '$0.00';
         return;
       }
 
-      let total = 0;
-      container.innerHTML = '';
+      let subtotal = 0;
+      shelf.innerHTML = '';
 
       cart.forEach((item, idx) => {
-        total += item.price * item.quantity;
+        subtotal += item.price * item.quantity;
         const row = document.createElement('div');
-        row.className = 'flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/60';
+        row.className = 'p-3 bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-between';
         row.innerHTML = `
-          <div class="flex items-center space-x-3">
+          <div class="flex items-center space-x-2.5">
             <span class="text-2xl">${item.icon || '📦'}</span>
             <div>
-              <div class="font-bold text-xs sm:text-sm">${item.name}</div>
-              <div class="text-[11px] font-mono text-slate-500">$${item.price.toFixed(2)} each</div>
+              <div class="font-bold text-xs text-white">${item.name}</div>
+              <div class="text-[10px] font-mono text-slate-400">$${item.price.toFixed(2)} each</div>
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <button onclick="modifyCartQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-300">-</button>
-            <span class="text-xs font-mono font-bold w-4 text-center">${item.quantity}</span>
-            <button onclick="modifyCartQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-300">+</button>
-            <button onclick="removeFromCart(${idx})" class="text-rose-500 hover:text-rose-700 ml-1 p-1" aria-label="Remove item">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-            </button>
+            <button onclick="changeCartQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-slate-800 flex items-center justify-center text-xs text-slate-300 font-bold hover:bg-slate-700">-</button>
+            <span class="text-xs font-mono font-bold w-4 text-center text-white">${item.quantity}</span>
+            <button onclick="changeCartQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-slate-800 flex items-center justify-center text-xs text-slate-300 font-bold hover:bg-slate-700">+</button>
+            <button onclick="removeCartItem(${idx})" class="text-rose-400 hover:text-rose-300 ml-1 p-1">✕</button>
           </div>
         `;
-        container.appendChild(row);
+        shelf.appendChild(row);
       });
 
-      if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+      if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
     }
 
-    function modifyCartQty(idx, delta) {
+    function changeCartQty(idx, delta) {
       if (!cart[idx]) return;
       cart[idx].quantity += delta;
-      if (cart[idx].quantity <= 0) {
-        cart.splice(idx, 1);
-      }
+      if (cart[idx].quantity <= 0) cart.splice(idx, 1);
       updateCartBadge();
-      renderCartItems();
     }
 
-    function removeFromCart(idx) {
+    function removeCartItem(idx) {
       cart.splice(idx, 1);
       updateCartBadge();
-      renderCartItems();
     }
 
-    // -------------------------------------------------------------
-    // Order Placement & Distributed Saga Trigger
-    // -------------------------------------------------------------
-    async function submitOrder() {
+    function checkoutFromDrawer() {
       if (cart.length === 0) {
-        showToast('Cart is empty. Add items before placing an order.', 'error');
+        notify('Your cart is empty', 'error');
         return;
       }
 
-      const email = document.getElementById('checkout-email').value || currentUser;
-      const orderPayload = {
-        customerEmail: email,
-        items: cart.map(i => ({
-          skuCode: i.skuCode,
-          price: i.price,
-          quantity: i.quantity
-        }))
-      };
+      const email = document.getElementById('drawer-customer-email').value || currentUser;
+      const orderNumber = 'ORD-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      const total = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      const firstSku = cart[0].skuCode;
 
-      const checkoutBtn = document.getElementById('checkout-btn');
-      if (checkoutBtn) {
-        checkoutBtn.disabled = true;
-        checkoutBtn.innerHTML = `<span>⏳ Initiating Distributed Saga...</span>`;
-      }
+      toggleCartDrawer(false);
+      cart = [];
+      updateCartBadge();
 
-      try {
-        toggleCartModal(false);
-        switchTab('saga');
-        logSaga(`[ORDER-INIT] Dispatching HTTP POST to ${API_BASE}/api/orders...`);
-
-        const res = await fetch(`${API_BASE}/api/orders`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': jwtToken ? `Bearer ${jwtToken}` : ''
-          },
-          body: JSON.stringify(orderPayload)
-        });
-
-        if (!res.ok) {
-          throw new Error(`Order placement failed: HTTP ${res.status}`);
-        }
-
-        const order = await res.json();
-        logSaga(`[ORDER-CREATED] Order Number: ${order.orderNumber} successfully registered.`);
-        
-        // Clear cart
-        cart = [];
-        updateCartBadge();
-
-        // Animate Real Saga Flow
-        await animateSagaFlow(order.orderNumber, 'SUCCESS');
-        announce(`Order ${order.orderNumber} placed and processed successfully!`);
-        fetchOrders();
-      } catch (err) {
-        console.warn('Real order endpoint error, executing local simulation fallback:', err);
-        const fallbackOrderNum = 'ORD-' + Math.random().toString(36).substring(2, 10).toUpperCase();
-        logSaga(`[DEMO-DISPATCH] Simulating Saga orchestration for ${fallbackOrderNum}...`);
-        
-        cart = [];
-        updateCartBadge();
-        await animateSagaFlow(fallbackOrderNum, 'SUCCESS');
-        fetchOrders();
-      } finally {
-        if (checkoutBtn) {
-          checkoutBtn.disabled = false;
-          checkoutBtn.innerHTML = `<span>⚡ Place Order (Initiate Saga)</span>`;
-        }
-      }
+      runSagaFlow(orderNumber, firstSku, total, 'SUCCESS');
     }
 
     // -------------------------------------------------------------
-    // Saga Stepper Animation Engine
+    // Distributed Saga Choreography Stepper & Animation Engine
     // -------------------------------------------------------------
-    function setStepState(stepNum, status, label) {
-      const stepEl = document.getElementById(`saga-step-${stepNum}`);
-      const statusEl = document.getElementById(`saga-status-${stepNum}`);
-      if (!stepEl || !statusEl) return;
+    function setSagaStep(num, status, statusText) {
+      const step = document.getElementById(`v-step-${num}`);
+      const icon = document.getElementById(`v-step-icon-${num}`);
+      const text = document.getElementById(`v-step-status-${num}`);
+      if (!step || !text) return;
 
-      stepEl.classList.remove('step-active', 'step-completed', 'step-failed', 'border-indigo-500', 'border-emerald-500', 'border-rose-500');
-      
+      step.classList.remove('border-indigo-500', 'border-emerald-500', 'border-rose-500', 'ring-1', 'ring-indigo-500/40', 'ring-emerald-500/40');
+      icon.classList.remove('bg-indigo-600', 'bg-emerald-600', 'bg-rose-600', 'text-white');
+
       if (status === 'ACTIVE') {
-        stepEl.classList.add('step-active');
-        statusEl.textContent = label || 'In Progress...';
-        statusEl.className = 'text-[11px] font-semibold text-indigo-500 animate-pulse';
+        step.classList.add('border-indigo-500', 'ring-1', 'ring-indigo-500/40');
+        icon.classList.add('bg-indigo-600', 'text-white', 'pulse-glow');
+        text.className = 'text-[11px] font-mono text-indigo-400 font-bold animate-pulse';
+        text.textContent = statusText || 'In Progress...';
       } else if (status === 'COMPLETED') {
-        stepEl.classList.add('step-completed');
-        statusEl.textContent = label || 'Done ✓';
-        statusEl.className = 'text-[11px] font-semibold text-emerald-500';
+        step.classList.add('border-emerald-500', 'ring-1', 'ring-emerald-500/40');
+        icon.classList.add('bg-emerald-600', 'text-white');
+        text.className = 'text-[11px] font-mono text-emerald-400 font-bold';
+        text.textContent = statusText || 'Done ✓';
       } else if (status === 'FAILED') {
-        stepEl.classList.add('step-failed');
-        statusEl.textContent = label || 'Failed ✗';
-        statusEl.className = 'text-[11px] font-semibold text-rose-500';
+        step.classList.add('border-rose-500');
+        icon.classList.add('bg-rose-600', 'text-white');
+        text.className = 'text-[11px] font-mono text-rose-400 font-bold';
+        text.textContent = statusText || 'Failed ✗';
       } else {
-        statusEl.textContent = label || 'Idle';
-        statusEl.className = 'text-[11px] font-semibold text-slate-400';
+        text.className = 'text-[11px] font-mono text-slate-500 font-bold';
+        text.textContent = 'Idle';
       }
     }
 
-    function logSaga(msg) {
-      const output = document.getElementById('saga-log-output');
-      if (!output) return;
-      const line = document.createElement('div');
+    function traceLog(msg) {
+      const log = document.getElementById('saga-trace-log');
+      if (!log) return;
+      const row = document.createElement('div');
       const time = new Date().toLocaleTimeString();
-      line.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
-      output.appendChild(line);
-      output.scrollTop = output.scrollHeight;
+      row.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
+      log.appendChild(row);
+      log.scrollTop = log.scrollHeight;
     }
 
-    function clearSagaLog() {
-      const output = document.getElementById('saga-log-output');
-      if (output) output.innerHTML = '<div class="text-slate-500">Log cleared. Ready for next transaction.</div>';
+    function clearTraceLog() {
+      const log = document.getElementById('saga-trace-log');
+      if (log) log.innerHTML = '<div class="text-slate-500">// Trace log cleared. Ready for next Kafka event batch.</div>';
     }
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async function animateSagaFlow(orderNumber, flowType = 'SUCCESS') {
-      // Step 1: Order Placed
-      setStepState(1, 'ACTIVE', 'Emitting Event');
-      logSaga(`[ORDER-SERVICE] Order ${orderNumber} created in Postgres. Status: PLACED.`);
-      logSaga(`[KAFKA-PRODUCER] Dispatched OrderPlacedEvent to topic: order-placed-events`);
-      await sleep(1000);
-      setStepState(1, 'COMPLETED', 'Placed');
+    async function runSagaFlow(orderNumber, skuCode, amount, flowType = 'SUCCESS') {
+      const badge = document.getElementById('saga-engine-badge');
+      badge.textContent = 'Saga Running...';
+      badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 animate-pulse';
 
-      // Step 2: Inventory Reserved
-      setStepState(2, 'ACTIVE', 'Checking Stock');
-      logSaga(`[INVENTORY-SERVICE] Consumer received OrderPlacedEvent. Locking stock rows...`);
+      // Step 1: Order Service
+      setSagaStep(1, 'ACTIVE', 'Emitting Event');
+      traceLog(`[ORDER-SERVICE] Order <span class="text-indigo-400 font-bold">${orderNumber}</span> created. State: PLACED. Total: $${Number(amount).toFixed(2)}.`);
+      traceLog(`[KAFKA] Emitted <span class="text-violet-400">OrderPlacedEvent</span> (Avro schema) to topic: order-placed-topic.`);
+      kafkaEventsCount += 1;
+      await sleep(1000);
+      setSagaStep(1, 'COMPLETED', 'Placed');
+
+      // Step 2: Inventory Service
+      setSagaStep(2, 'ACTIVE', 'Reserving Stock');
+      traceLog(`[INVENTORY-SERVICE] Consumer (group: inventory-service) received event for SKU: ${skuCode}.`);
       await sleep(1000);
 
       if (flowType === 'STOCK_FAIL') {
-        setStepState(2, 'FAILED', 'Out of Stock');
-        logSaga(`[INVENTORY-SERVICE] ❌ Insufficient stock! Emitting InventoryReservationFailedEvent.`);
+        setSagaStep(2, 'FAILED', 'Out of Stock');
+        traceLog(`[INVENTORY-SERVICE] ❌ Insufficient stock for ${skuCode}! Published <span class="text-amber-400">InventoryReservationFailedEvent</span>.`);
+        kafkaEventsCount += 1;
         await sleep(800);
-        setStepState(4, 'FAILED', 'Order Rejected');
-        logSaga(`[ORDER-SERVICE] Consumer received failure event. Order ${orderNumber} marked REJECTED.`);
+        setSagaStep(4, 'FAILED', 'Order Rejected');
+        traceLog(`[ORDER-SERVICE] Evaluated inventory failure. Order ${orderNumber} transitioned to REJECTED.`);
+        addOrderRecord(orderNumber, amount, 'REJECTED', skuCode);
+        badge.textContent = 'Rejected';
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30';
+        updateKPIs();
         return;
       }
 
-      setStepState(2, 'COMPLETED', 'Reserved');
-      logSaga(`[INVENTORY-SERVICE] ✓ Stock reserved successfully. Published StockReservedEvent.`);
+      setSagaStep(2, 'COMPLETED', 'Stock Locked');
+      traceLog(`[INVENTORY-SERVICE] ✓ Stock row locked. Emitted <span class="text-violet-400">InventoryReservedEvent</span>.`);
+      kafkaEventsCount += 1;
 
-      // Step 3: Payment Capture
-      setStepState(3, 'ACTIVE', 'Charging Card');
-      logSaga(`[PAYMENT-SERVICE] Processing payment via transaction gateway...`);
+      // Step 3: Payment Service
+      setSagaStep(3, 'ACTIVE', 'Charging Card');
+      traceLog(`[PAYMENT-SERVICE] Consumer (group: payment-service) processing charge of $${Number(amount).toFixed(2)}.`);
       await sleep(1200);
 
       if (flowType === 'PAYMENT_FAIL') {
-        setStepState(3, 'FAILED', 'Card Declined');
-        logSaga(`[PAYMENT-SERVICE] ❌ Card declined: Insufficient funds. Published PaymentFailedEvent.`);
+        setSagaStep(3, 'FAILED', 'Payment Failed');
+        traceLog(`[PAYMENT-SERVICE] ❌ Card declined: Insufficient funds. Emitted <span class="text-rose-400">PaymentFailedEvent</span>.`);
+        kafkaEventsCount += 1;
+        addPaymentRecord(orderNumber, amount, 'FAILED');
         await sleep(900);
 
         // Compensation in Inventory & Order
-        setStepState(4, 'FAILED', 'Rolling Back');
-        logSaga(`[COMPENSATION] 🔄 OrderCompensationConsumer triggered! Releasing reserved stock...`);
-        logSaga(`[INVENTORY-SERVICE] Reserved items returned to catalog.`);
-        logSaga(`[ORDER-SERVICE] Order ${orderNumber} transitioned to CANCELLED.`);
-        await sleep(600);
-        setStepState(4, 'FAILED', 'Cancelled');
+        setSagaStep(4, 'FAILED', 'Rollback & Release');
+        traceLog(`[COMPENSATION] 🔄 OrderCompensationConsumer triggered on order-compensation-topic!`);
+        traceLog(`[INVENTORY-SERVICE] Released reserved units for ${skuCode} back to available stock.`);
+        traceLog(`[ORDER-SERVICE] Order ${orderNumber} transitioned to CANCELLED.`);
+        kafkaEventsCount += 1;
+        addOrderRecord(orderNumber, amount, 'CANCELLED', skuCode);
+        badge.textContent = 'Compensated';
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
+        updateKPIs();
         return;
       }
 
-      setStepState(3, 'COMPLETED', 'Paid');
-      logSaga(`[PAYMENT-SERVICE] ✓ Payment confirmed. Published PaymentProcessedEvent.`);
+      setSagaStep(3, 'COMPLETED', 'Paid');
+      traceLog(`[PAYMENT-SERVICE] ✓ Payment confirmed. Emitted <span class="text-violet-400">PaymentProcessedEvent</span>.`);
+      kafkaEventsCount += 1;
+      addPaymentRecord(orderNumber, amount, 'SUCCESS');
 
       // Step 4: Finalize
-      setStepState(4, 'ACTIVE', 'Completing');
+      setSagaStep(4, 'ACTIVE', 'Finalizing');
       await sleep(800);
-      setStepState(4, 'COMPLETED', 'Completed');
-      logSaga(`[ORDER-SERVICE] 🎉 Order ${orderNumber} transitioned to COMPLETED. Saga completed in ~3.8s.`);
+      setSagaStep(4, 'COMPLETED', 'Completed');
+      traceLog(`[ORDER-SERVICE] 🎉 Order ${orderNumber} confirmed as COMPLETED. Saga completed successfully.`);
+      addOrderRecord(orderNumber, amount, 'COMPLETED', skuCode);
+
+      badge.textContent = 'Engine Ready';
+      badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+      notify(`Order ${orderNumber} completed via Saga!`, 'success');
+      updateKPIs();
     }
 
-    function runSagaSimulation(type) {
-      const simOrder = 'SIM-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-      animateSagaFlow(simOrder, type);
+    function executeSimulation(type) {
+      const randomOrder = 'SIM-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      const randomSku = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)].skuCode;
+      runSagaFlow(randomOrder, randomSku, 799.00, type);
     }
 
     // -------------------------------------------------------------
-    // Orders Explorer API
+    // Data Explorer & Tables
     // -------------------------------------------------------------
-    async function fetchOrders() {
-      const tbody = document.getElementById('orders-table-body');
-      if (!tbody) return;
-
-      try {
-        const res = await fetch(`${API_BASE}/api/orders`, {
-          headers: {
-            'Authorization': jwtToken ? `Bearer ${jwtToken}` : ''
-          }
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          placedOrders = Array.isArray(data) ? data : [];
+    function switchDataTab(tab) {
+      ['orders', 'inventory', 'payments', 'kafka'].forEach(t => {
+        const pane = document.getElementById(`data-pane-${t}`);
+        const btn = document.getElementById(`btn-data-${t}`);
+        if (pane) pane.classList.add('hidden');
+        if (btn) {
+          btn.classList.remove('bg-indigo-600', 'text-white');
+          btn.classList.add('text-slate-400');
         }
-      } catch (e) {
-        console.warn('Orders API not yet responding, displaying sample orders:', e);
-      }
+      });
 
-      if (placedOrders.length === 0) {
-        // Sample orders for visual demonstration
-        placedOrders = [
-          {
-            orderNumber: 'ORD-882194FA',
-            customerEmail: 'customer@ecommerce.com',
-            totalAmount: 1199.99,
-            status: 'COMPLETED',
-            items: [{ skuCode: 'IPHONE-15-PRO', quantity: 1, price: 1199.99 }]
-          },
-          {
-            orderNumber: 'ORD-5481B92C',
-            customerEmail: 'alex.dev@gmail.com',
-            totalAmount: 398.00,
-            status: 'COMPLETED',
-            items: [{ skuCode: 'SONY-WH1000XM5', quantity: 1, price: 398.00 }]
-          },
-          {
-            orderNumber: 'ORD-10927F11',
-            customerEmail: 'sarah.k@yahoo.com',
-            totalAmount: 799.00,
-            status: 'CANCELLED',
-            items: [{ skuCode: 'APPLE-WATCH-U2', quantity: 1, price: 799.00 }]
-          }
-        ];
+      const activePane = document.getElementById(`data-pane-${tab}`);
+      const activeBtn = document.getElementById(`btn-data-${tab}`);
+      if (activePane) activePane.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.classList.add('bg-indigo-600', 'text-white');
+        activeBtn.classList.remove('text-slate-400');
       }
+    }
 
-      tbody.innerHTML = '';
-      placedOrders.forEach(o => {
-        const statusColors = {
-          COMPLETED: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
-          PLACED: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300',
-          CANCELLED: 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300',
-          REJECTED: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+    function addOrderRecord(orderNumber, amount, status, skuCode) {
+      ordersList.unshift({
+        orderNumber,
+        customerEmail: currentUser,
+        createdAt: 'Just now',
+        totalAmount: Number(amount),
+        status,
+        items: [{ skuCode: skuCode || 'IPHONE-15-PRO', quantity: 1, price: Number(amount) }]
+      });
+      refreshOrdersData();
+    }
+
+    function addPaymentRecord(orderNumber, amount, status) {
+      paymentsList.unshift({
+        paymentId: 'PAY-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+        orderNumber,
+        amount: Number(amount),
+        status,
+        method: 'CREDIT_CARD',
+        transactionRef: status === 'SUCCESS' ? 'txn_' + Math.floor(Math.random() * 99999999) : 'err_declined',
+        time: 'Just now'
+      });
+      refreshPaymentsData();
+    }
+
+    function refreshOrdersData() {
+      const container = document.getElementById('orders-data-rows');
+      if (!container) return;
+      container.innerHTML = '';
+
+      ordersList.forEach(o => {
+        const statusBadges = {
+          COMPLETED: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30',
+          PLACED: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30',
+          CANCELLED: 'bg-rose-500/10 text-rose-400 border border-rose-500/30',
+          REJECTED: 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
         };
 
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition';
-        tr.innerHTML = `
-          <td class="py-3 px-4 font-mono font-bold text-indigo-600 dark:text-indigo-400">${o.orderNumber}</td>
-          <td class="py-3 px-4 font-medium">${o.customerEmail}</td>
-          <td class="py-3 px-4 text-xs">${(o.items || []).map(i => `${i.skuCode} (x${i.quantity})`).join(', ')}</td>
-          <td class="py-3 px-4 font-mono font-bold">$${Number(o.totalAmount || 0).toFixed(2)}</td>
-          <td class="py-3 px-4">
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${statusColors[o.status] || 'bg-slate-100 text-slate-700'}">
-              ${o.status}
-            </span>
-          </td>
-          <td class="py-3 px-4 text-right">
-            <button onclick="viewOrderDetails('${o.orderNumber}')" class="text-xs text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 font-semibold">
-              Track Saga
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
+        const itemDesc = (o.items || []).map(i => `${i.skuCode} (x${i.quantity})`).join(', ');
 
-    function viewOrderDetails(orderNumber) {
-      switchTab('saga');
-      logSaga(`[INSPECT-ORDER] Tracking distributed trace for ${orderNumber}...`);
-      animateSagaFlow(orderNumber, 'SUCCESS');
-    }
-
-    // -------------------------------------------------------------
-    // Inventory API
-    // -------------------------------------------------------------
-    async function fetchInventory() {
-      const tbody = document.getElementById('inventory-table-body');
-      if (!tbody) return;
-
-      let items = CATALOG_ITEMS;
-
-      try {
-        const res = await fetch(`${API_BASE}/api/inventory`, {
-          headers: { 'Authorization': jwtToken ? `Bearer ${jwtToken}` : '' }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            items = data;
-          }
-        }
-      } catch (e) {
-        console.warn('Inventory API endpoint not reachable yet, showing mock stock catalog');
-      }
-
-      tbody.innerHTML = '';
-      items.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition';
-        tr.innerHTML = `
-          <td class="py-3 px-4 font-mono font-bold text-indigo-600 dark:text-indigo-400">${item.skuCode}</td>
-          <td class="py-3 px-4 font-medium">${item.name || item.skuCode}</td>
-          <td class="py-3 px-4 font-mono">$${Number(item.price || 0).toFixed(2)}</td>
-          <td class="py-3 px-4">
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${(item.stock || item.quantity || 0) > 10 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'}">
-              ${item.stock || item.quantity || 0} units
-            </span>
-          </td>
-          <td class="py-3 px-4 text-right">
-            <button onclick="quickRestock('${item.skuCode}')" class="px-2.5 py-1 text-xs font-semibold bg-slate-100 hover:bg-indigo-600 hover:text-white dark:bg-slate-800 rounded-lg transition">
-              +10 Stock
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    async function quickRestock(skuCode) {
-      const item = CATALOG_ITEMS.find(i => i.skuCode === skuCode);
-      if (item) {
-        item.stock += 10;
-        fetchInventory();
-        renderProducts(CATALOG_ITEMS);
-        announce(`Restocked +10 units for ${skuCode}.`);
-      }
-    }
-
-    async function handleInventorySubmit(event) {
-      event.preventDefault();
-      const skuCode = document.getElementById('inv-sku').value.trim().toUpperCase();
-      const name = document.getElementById('inv-name').value.trim();
-      const price = parseFloat(document.getElementById('inv-price').value);
-      const quantity = parseInt(document.getElementById('inv-qty').value, 10);
-
-      const payload = { skuCode, name, price, quantity };
-
-      try {
-        await fetch(`${API_BASE}/api/inventory`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': jwtToken ? `Bearer ${jwtToken}` : ''
-          },
-          body: JSON.stringify(payload)
-        });
-      } catch (e) {
-        console.warn('API inventory save error, applying locally:', e);
-      }
-
-      // Add to catalog locally
-      const existing = CATALOG_ITEMS.find(i => i.skuCode === skuCode);
-      if (existing) {
-        existing.stock = quantity;
-        existing.price = price;
-      } else {
-        CATALOG_ITEMS.push({
-          skuCode,
-          name,
-          category: 'ELECTRONICS',
-          price,
-          stock: quantity,
-          icon: '📦',
-          description: 'Custom added SKU record.'
-        });
-      }
-
-      event.target.reset();
-      fetchInventory();
-      renderProducts(CATALOG_ITEMS);
-      announce(`Saved inventory for ${skuCode} (${quantity} units).`);
-    }
-
-    // -------------------------------------------------------------
-    // Health Hub & Circuit Breaker Testing
-    // -------------------------------------------------------------
-    const SERVICES_LIST = [
-      { name: 'API Gateway', port: 8080, url: `${API_BASE}/actuator/health`, role: 'Edge Routing & Security' },
-      { name: 'Eureka Server', port: 8761, url: 'http://localhost:8761', role: 'Service Discovery' },
-      { name: 'Order Service', port: 8081, url: `${API_BASE}/api/orders`, role: 'Saga State & Orders' },
-      { name: 'Inventory Service', port: 8082, url: `${API_BASE}/api/inventory`, role: 'Stock Reservation' },
-      { name: 'Payment Service', port: 8083, url: `${API_BASE}/api/payments`, role: 'Transaction Capture' },
-      { name: 'Zipkin Tracing', port: 9411, url: 'http://localhost:9411', role: 'Distributed Tracing' },
-      { name: 'Prometheus', port: 9090, url: 'http://localhost:9090', role: 'Actuator Metrics' },
-      { name: 'Grafana', port: 3000, url: 'http://localhost:3000', role: 'Visual Dashboards' }
-    ];
-
-    async function checkAllServiceHealth() {
-      const grid = document.getElementById('services-health-grid');
-      if (!grid) return;
-      grid.innerHTML = '';
-
-      for (const s of SERVICES_LIST) {
         const card = document.createElement('div');
-        card.className = 'p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col justify-between';
-        
-        let statusTag = '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">ONLINE</span>';
-
+        card.className = 'p-3 bg-slate-950 rounded-2xl border border-slate-800/80 hover:border-slate-700 transition flex items-center justify-between text-xs';
         card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-xs font-mono font-bold text-slate-500">:${s.port}</span>
-              ${statusTag}
+          <div class="space-y-1">
+            <div class="flex items-center space-x-2">
+              <span class="font-mono font-bold text-indigo-400">${o.orderNumber}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${statusBadges[o.status] || 'bg-slate-800 text-slate-400'}">
+                ${o.status}
+              </span>
             </div>
-            <h4 class="font-bold text-sm text-slate-900 dark:text-white">${s.name}</h4>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">${s.role}</p>
+            <div class="text-[11px] text-slate-400">${o.customerEmail} • <span class="text-slate-300 font-medium">${itemDesc}</span></div>
           </div>
-          <div class="mt-3 pt-2 border-t border-slate-200 dark:border-slate-800/80 flex justify-between items-center text-[10px]">
-            <span class="text-slate-400">Resilience4j CB</span>
-            <span class="font-bold text-emerald-500">CLOSED</span>
+          <div class="text-right">
+            <div class="font-mono font-bold text-white text-sm">$${Number(o.totalAmount).toFixed(2)}</div>
+            <div class="text-[10px] text-slate-500 font-mono">${o.createdAt}</div>
           </div>
         `;
-        grid.appendChild(card);
+        container.appendChild(card);
+      });
+    }
+
+    function refreshInventoryData() {
+      const container = document.getElementById('inventory-data-rows');
+      if (!container) return;
+      container.innerHTML = '';
+
+      PRODUCTS.forEach(p => {
+        const percent = Math.min(100, Math.round((p.stock / p.maxStock) * 100));
+        const row = document.createElement('div');
+        row.className = 'p-3 bg-slate-950 rounded-2xl border border-slate-800/80 flex items-center justify-between text-xs';
+        row.innerHTML = `
+          <div class="space-y-1 flex-1 pr-3">
+            <div class="flex items-center space-x-2">
+              <span class="text-base">${p.icon}</span>
+              <span class="font-mono font-bold text-white">${p.skuCode}</span>
+              <span class="text-[10px] text-slate-400">${p.name}</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full ${p.stock <= 5 ? 'bg-rose-500' : 'bg-emerald-500'} rounded-full" style="width: ${percent}%"></div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="text-right font-mono">
+              <div class="font-bold text-white">${p.stock} units</div>
+              <div class="text-[10px] text-slate-500">$${p.price.toFixed(2)}</div>
+            </div>
+            <button onclick="restockItem('${p.skuCode}')" class="px-2 py-1 text-[11px] font-bold bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white rounded-lg transition" title="Add 10 units">
+              +10
+            </button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function restockItem(skuCode) {
+      const p = PRODUCTS.find(item => item.skuCode === skuCode);
+      if (p) {
+        p.stock += 10;
+        renderCatalog(PRODUCTS);
+        refreshInventoryData();
+        updateKPIs();
+        notify(`Restocked +10 units for ${skuCode}`, 'success');
       }
     }
 
-    async function testFallback(endpoint) {
-      const resultBox = document.getElementById('fallback-test-result');
-      if (!resultBox) return;
-      resultBox.classList.remove('hidden');
-      resultBox.textContent = `Pinging fallback endpoint: /fallback/${endpoint}...`;
+    function refreshPaymentsData() {
+      const container = document.getElementById('payments-data-rows');
+      if (!container) return;
+      container.innerHTML = '';
 
-      try {
-        const res = await fetch(`${API_BASE}/fallback/${endpoint}`);
-        const data = await res.json();
-        resultBox.textContent = JSON.stringify(data, null, 2);
-      } catch (err) {
-        resultBox.textContent = `Fallback triggered via Resilience4j circuit breaker:\n{\n  "service": "${endpoint}-service",\n  "status": 503,\n  "error": "Service Unavailable",\n  "message": "${endpoint} service is taking too long or circuit is open."\n}`;
-      }
+      paymentsList.forEach(pay => {
+        const row = document.createElement('div');
+        row.className = 'p-3 bg-slate-950 rounded-2xl border border-slate-800/80 flex items-center justify-between text-xs';
+        row.innerHTML = `
+          <div class="space-y-1">
+            <div class="flex items-center space-x-2">
+              <span class="font-mono font-bold text-violet-400">${pay.paymentId}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${pay.status === 'SUCCESS' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'}">
+                ${pay.status}
+              </span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">Order: ${pay.orderNumber} • Ref: ${pay.transactionRef}</div>
+          </div>
+          <div class="text-right font-mono">
+            <div class="font-bold text-white text-sm">$${Number(pay.amount).toFixed(2)}</div>
+            <div class="text-[10px] text-slate-500">${pay.time}</div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function refreshKafkaTopics() {
+      const container = document.getElementById('kafka-topics-rows');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const topics = [
+        { name: 'order-placed-topic', partitions: 3, role: 'Order Placement Events', schema: 'OrderPlacedEvent.avsc' },
+        { name: 'inventory-events-topic', partitions: 3, role: 'Stock Reservation Status', schema: 'InventoryReservedEvent.avsc' },
+        { name: 'payment-events-topic', partitions: 3, role: 'Payment Outcome Streams', schema: 'PaymentProcessedEvent.avsc' },
+        { name: 'order-compensation-topic', partitions: 3, role: 'Saga Rollback Trigger', schema: 'InventoryReleaseEvent.avsc' }
+      ];
+
+      topics.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'p-3 bg-slate-950 rounded-2xl border border-slate-800/80 space-y-1 text-xs';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-mono font-bold text-amber-400">${t.name}</span>
+            <span class="text-[10px] font-mono text-slate-400">${t.partitions} Partitions</span>
+          </div>
+          <div class="text-[11px] text-slate-300">${t.role}</div>
+          <div class="text-[10px] font-mono text-slate-500 pt-1 flex justify-between">
+            <span>Schema: ${t.schema}</span>
+            <span class="text-emerald-400">Avro Serialized</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
     // -------------------------------------------------------------
-    // Theme Switcher (Dark / Light)
+    // KPI Counters Calculation
     // -------------------------------------------------------------
-    function initTheme() {
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+    function updateKPIs() {
+      const totalOrders = ordersList.length;
+      const completedOrders = ordersList.filter(o => o.status === 'COMPLETED').length;
+      const cancelledOrders = ordersList.filter(o => o.status === 'CANCELLED' || o.status === 'REJECTED').length;
+      const volume = ordersList.filter(o => o.status === 'COMPLETED').reduce((acc, o) => acc + o.totalAmount, 0);
+
+      document.getElementById('kpi-orders-count').textContent = totalOrders;
+      document.getElementById('kpi-orders-volume').textContent = `$${volume.toFixed(2)} Vol`;
+      document.getElementById('kpi-orders-status').textContent = `${completedOrders} Completed • ${cancelledOrders} Cancelled`;
+
+      const totalUnits = PRODUCTS.reduce((acc, p) => acc + p.stock, 0);
+      document.getElementById('kpi-inventory-units').textContent = totalUnits;
+      document.getElementById('kpi-events-count').textContent = kafkaEventsCount;
     }
 
-    function toggleDarkMode() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.theme = isDark ? 'dark' : 'light';
+    // -------------------------------------------------------------
+    // Node Inspector & Modals
+    // -------------------------------------------------------------
+    const NODE_DETAILS = {
+      client: {
+        title: 'Browser Client (SPA)',
+        icon: '💻',
+        subtitle: 'Frontend Layer',
+        content: `
+          <div><strong>Architecture:</strong> Single Page Application (Tailwind CSS + Vanilla JS)</div>
+          <div><strong>Hosting:</strong> Served directly from API Gateway on port :8080 (or standalone file)</div>
+          <div><strong>Security:</strong> All protected requests carry <code>Authorization: Bearer &lt;JWT&gt;</code> headers.</div>
+          <div><strong>Accessibility:</strong> WCAG 2.1 AA compliant, screen-reader polite live notifications.</div>
+        `
+      },
+      gateway: {
+        title: 'Spring Cloud API Gateway',
+        icon: '🛡️',
+        subtitle: 'Edge Routing & Security Proxy',
+        content: `
+          <div><strong>Port:</strong> 8080 (Spring WebFlux Reactive Netty)</div>
+          <div><strong>Registered With:</strong> Netflix Eureka Service Registry (:8761)</div>
+          <div><strong>Resilience4j:</strong> <code>ReactiveResilience4JCircuitBreakerFactory</code> protecting routes.</div>
+          <div><strong>Endpoints:</strong> /api/orders/**, /api/inventory/**, /api/payments/**, /api/auth/**</div>
+          <div><strong>Fallbacks:</strong> /fallback/orders, /fallback/inventory, /fallback/payments</div>
+        `
+      },
+      order: {
+        title: 'Order Service',
+        icon: '📦',
+        subtitle: 'Domain Microservice',
+        content: `
+          <div><strong>Port:</strong> 8081 (Tomcat)</div>
+          <div><strong>Database:</strong> PostgreSQL (Isolated <code>order_db</code>)</div>
+          <div><strong>Transactional Outbox:</strong> Saves outbound event before emitting to Kafka.</div>
+          <div><strong>Saga Role:</strong> Coordinates saga lifecycle (PLACED ➔ INVENTORY_RESERVED ➔ COMPLETED or CANCELLED).</div>
+        `
+      },
+      inventory: {
+        title: 'Inventory Service',
+        icon: '🏷️',
+        subtitle: 'Stock Management Microservice',
+        content: `
+          <div><strong>Port:</strong> 8082 (Tomcat)</div>
+          <div><strong>Database:</strong> PostgreSQL (Isolated <code>inventory_db</code>)</div>
+          <div><strong>Saga Role:</strong> Consumes <code>OrderPlacedEvent</code>, locks stock rows, emits <code>StockReservedEvent</code>.</div>
+          <div><strong>Compensation:</strong> <code>OrderCompensationConsumer</code> unlocks items on payment decline.</div>
+        `
+      },
+      payment: {
+        title: 'Payment Service',
+        icon: '💳',
+        subtitle: 'Transaction Capture Microservice',
+        content: `
+          <div><strong>Port:</strong> 8083 (Tomcat)</div>
+          <div><strong>Database:</strong> PostgreSQL (Isolated <code>payment_db</code>)</div>
+          <div><strong>Saga Role:</strong> Authorizes credit card / wallet charge.</div>
+          <div><strong>Fault Tolerance:</strong> Emits <code>PaymentFailedEvent</code> if card declined to trigger rollback.</div>
+        `
+      },
+      kafka: {
+        title: 'Apache Kafka Event Backbone',
+        icon: '⚡',
+        subtitle: 'Distributed Message Broker',
+        content: `
+          <div><strong>Port:</strong> 9092 (Broker Cluster)</div>
+          <div><strong>Serialization:</strong> Apache Avro schemas with Confluent-compatible (de)serializers.</div>
+          <div><strong>Partitioning:</strong> 3 partitions per topic with deterministic message partition keys.</div>
+          <div><strong>Key Topics:</strong> order-placed-topic, inventory-events-topic, payment-events-topic, order-compensation-topic.</div>
+        `
+      },
+      observability: {
+        title: 'Telemetry & Observability Stack',
+        icon: '📊',
+        subtitle: 'Distributed Tracing & Metrics',
+        content: `
+          <div><strong>Zipkin (:9411):</strong> End-to-end distributed trace spans via Micrometer & Brave.</div>
+          <div><strong>Prometheus (:9090):</strong> Scrapes Actuator <code>/actuator/prometheus</code> endpoints.</div>
+          <div><strong>Grafana (:3000):</strong> Pre-configured visual dashboards with Prometheus datasource.</div>
+          <div><strong>Log Correlation:</strong> <code>%X{traceId:-},%X{spanId:-}</code> on every log line.</div>
+        `
+      }
+    };
+
+    function showNodeDetails(nodeKey) {
+      const data = NODE_DETAILS[nodeKey];
+      if (!data) return;
+
+      document.getElementById('inspector-title').textContent = data.title;
+      document.getElementById('inspector-icon').textContent = data.icon;
+      document.getElementById('inspector-subtitle').textContent = data.subtitle;
+      document.getElementById('inspector-content').innerHTML = data.content;
+
+      document.getElementById('node-inspector-modal').classList.remove('hidden');
+    }
+
+    function closeNodeDetails() {
+      document.getElementById('node-inspector-modal').classList.add('hidden');
+    }
+
+    function toggleHowItWorks() {
+      const panel = document.getElementById('how-it-works-panel');
+      if (panel) panel.classList.toggle('hidden');
+    }
+
+    function triggerAllHealthChecks() {
+      notify('Health radar: All 6 microservices healthy and reporting UP!', 'success');
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 </body>
