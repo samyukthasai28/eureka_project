@@ -275,3 +275,15 @@ To build runnable production boot JARs:
 ```powershell
 .\gradlew bootJar
 ```
+
+---
+
+## 🔍 System Verification & Health Check Script
+
+Verify all running microservices, gateways, and observability endpoints at any time:
+
+```powershell
+.\scripts\health-check.ps1
+```
+
+This tests Eureka (:8761), Config Server (:8888), API Gateway (:8080), Auth Provider, Circuit Breaker Fallbacks, Zipkin (:9411), Prometheus (:9090), and Grafana (:3000) and displays a color-coded status summary table.

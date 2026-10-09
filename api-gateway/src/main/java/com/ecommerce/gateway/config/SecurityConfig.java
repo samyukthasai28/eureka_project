@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/", "/index.html", "/favicon.ico", "/dashboard", "/static/**", "/css/**", "/js/**", "/assets/**").permitAll()
-                        .pathMatchers("/actuator/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/fallback/**").permitAll()
+                        .pathMatchers("/actuator/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/webjars/**", "/fallback/**").permitAll()
                         .pathMatchers("/api/auth/**", "/auth/**").permitAll()
                         .pathMatchers("/api/orders/**", "/api/inventory/**", "/api/payments/**",
                                       "/orders/**", "/inventory/**", "/payments/**").authenticated()
