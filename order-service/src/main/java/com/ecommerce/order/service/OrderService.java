@@ -28,6 +28,7 @@ public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final OrderProducer orderProducer;
+    private final OrderEventStoreService orderEventStoreService;
 
     @Transactional
     public OrderResponse placeOrder(OrderRequest request) {
@@ -56,8 +57,9 @@ public class OrderService {
         Order saved = orderRepository.save(order);
         log.info("[ORDER-SERVICE] Created order: {} with total: {}", orderNumber, total);
 
+        String eventId = UUID.randomUUID().toString();
         OrderPlacedEvent event = OrderPlacedEvent.builder()
-                .eventId(UUID.randomUUID().toString())
+                .eventId(eventId)
                 .orderId(saved.getId())
                 .orderNumber(saved.getOrderNumber())
                 .customerEmail(saved.getCustomerEmail())
@@ -66,6 +68,10 @@ public class OrderService {
                 .timestamp(LocalDateTime.now())
                 .build();
 
+        // Persist to transactional outbox store
+        orderEventStoreService.saveOutboundEvent(eventId, saved.getId(), saved.getOrderNumber(), "ORDER_PLACED", event);
+
+        // Dispatch to Kafka
         orderProducer.sendOrderPlacedEvent(event);
 
         return mapToResponse(saved);
