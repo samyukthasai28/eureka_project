@@ -9,3 +9,8 @@
 - Tuned Resilience4j sliding window size (10 calls) and failure rate threshold (50%) on API Gateway routes.
 - Benchmarked fallback route handlers for `/fallback/orders`, `/fallback/inventory`, and `/fallback/payments`.
 - Verified exponential backoff retry policies and bulkhead concurrency isolation under simulated degraded conditions.
+
+## Centralized Configuration & Event Schemas (2026-10-14)
+- Verified Spring Cloud Config Server native repository hierarchy and profile-specific property inheritance.
+- Validated Apache Avro schema evolution and backward compatibility for `OrderPlacedEvent`, `InventoryReservedEvent`, and `PaymentProcessedEvent`.
+- Audited Kafka consumer group rebalance listeners and transactional outbox table indexing in PostgreSQL.
