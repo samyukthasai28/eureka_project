@@ -14,3 +14,8 @@
 - Verified Spring Cloud Config Server native repository hierarchy and profile-specific property inheritance.
 - Validated Apache Avro schema evolution and backward compatibility for `OrderPlacedEvent`, `InventoryReservedEvent`, and `PaymentProcessedEvent`.
 - Audited Kafka consumer group rebalance listeners and transactional outbox table indexing in PostgreSQL.
+
+## Observability, Tracing & Metrics Instrumentation (2026-10-15)
+- Configured Micrometer Brave distributed tracing context propagation and B3 header injection across gateway routes.
+- Instrumented Spring Boot Actuator Prometheus metrics scrapers for JVM garbage collection, HTTP latency, and Kafka throughput.
+- Validated Kubernetes service descriptors in `k8s/` and container orchestration definitions in `docker-compose.yml`.
