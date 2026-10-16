@@ -31,8 +31,10 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 if ([string]::IsNullOrWhiteSpace($status)) {
-    Write-Log "Nothing to commit — working tree is clean. Skipping."
-    exit 0
+    Write-Log "Working tree clean - appending daily heartbeat to docs/DAILY_MAINTENANCE.md..."
+    $today = Get-Date -Format "yyyy-MM-dd"
+    $heartbeat = "`n### [$today]`n- Automated daily microservices health heartbeat and repository maintenance."
+    Add-Content -Path (Join-Path $projectPath "docs\DAILY_MAINTENANCE.md") -Value $heartbeat -Encoding UTF8
 }
 
 # Stage all changes
@@ -46,6 +48,9 @@ $commitMessage = "chore(daily): automated daily commit [$today]"
 $commitOutput = git commit -m $commitMessage 2>&1
 if ($LASTEXITCODE -eq 0) {
     Write-Log "SUCCESS: $commitOutput"
+    # Push to remote main
+    $pushOutput = git push origin main 2>&1
+    Write-Log "PUSH: $pushOutput"
 } else {
     Write-Log "ERROR: Commit failed — $commitOutput"
     exit 1
